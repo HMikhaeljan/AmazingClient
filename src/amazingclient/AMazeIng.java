@@ -5,6 +5,7 @@
  */
 package amazingclient;
 
+import Interfaces.IGame;
 import amazingclient.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,6 +50,8 @@ public class AMazeIng extends Application {
     public Group group;
 
     public ArrayList<Node> nodes;
+    
+    private IGame game;
 
     public Scene scene;
     //public EnemyController eController;
@@ -84,16 +87,16 @@ public class AMazeIng extends Application {
         Node nodWall = new ImageView(imgWall);
         Group groupWall = new Group(nodWall);
 
-        //Block[][] mazegrid =;
+        Block[][] mazegrid = new Block[5][10];
 
         //Create list of all the block images
         ArrayList<Image> images = new ArrayList<Image>();
         nodes = new ArrayList<Node>();
 
-        for (int y = 0; y < testmaze.getGridSize(); y++) {
-            for (int x = 0; x < testmaze.getGridSize(); x++) {
+        for (int y = 0; y < mazegrid.length; y++) {
+            for (int x = 0; x < mazegrid.length; x++) {
                 switch (mazegrid[y][x]) {
-                    case Block.SOLID:
+                    case SOLID:
                         Image sol = Sprite.LoadSprite("Resources/WallSprite.jpg", 16, 16);
                         images.add(sol);
                         Node wpos = new ImageView(sol);
@@ -101,22 +104,22 @@ public class AMazeIng extends Application {
                         nodes.add(wpos);
                         solidBlocks.add(wpos);
                         break;
-                    case Block.OPEN:
+                    case OPEN:
                         Image ope = Sprite.LoadSprite("Resources/FloorSprite.jpg", 16, 16);
                         images.add(ope);
                         Node opos = new ImageView(ope);
                         opos.relocate(x * spritesize, y * spritesize);
                         nodes.add(opos);
                         break;
-                    case Block.SPAWNPOINT:
+                    case SPAWNPOINT:
                         Image spp = Sprite.LoadSprite("Resources/SpawnPoint.jpg", 16, 16);
                         images.add(spp);
                         Node sppp = new ImageView(spp);
                         sppp.relocate(x * spritesize, y * spritesize);
                         nodes.add(sppp);
-                        spawnPoints.add(sppp);
+                        //TO DO: spawnPoints.add(sppp);
                         break;
-                    case Block.EDGE:
+                    case EDGE:
                         Image edg = Sprite.LoadSprite("Resources/MapEdge.jpg", 16, 16);
                         images.add(edg);
                         Node edgp = new ImageView(edg);
