@@ -6,6 +6,7 @@
 package amazingclient;
 
 
+import Database.DatabaseConnection;
 import java.awt.Dialog;
 import java.io.IOException;
 import java.net.URL;
@@ -156,7 +157,7 @@ public class LoginController implements Initializable {
             fakegames.add("WTF");
             initViews();
             //stage.close();
-            AMazeIng a = new AMazeIng();
+            AmazingClient a = new AmazingClient();
             //stage = (Stage) btBeginLogIn.getScene().getWindow();
             Stage stageAMazeIng = new Stage();
             a.start(stageAMazeIng);

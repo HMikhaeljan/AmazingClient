@@ -5,10 +5,10 @@
  */
 package Database;
 
-import GameLogic.Ability;
-import GameLogic.PlayerRole;
-import GameLogic.Stat;
-import GameLogic.User;
+import amazingclient.Ability;
+import amazingclient.PlayerRole;
+import amazingclient.Stat;
+import amazingclient.User;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
