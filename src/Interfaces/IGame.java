@@ -3,16 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package amazingclient;
+package Interfaces;
+
+import amazingclient.Block;
+import java.util.List;
 
 /**
  *
  * @author Jeroen0606
  */
-public interface IPlayer {
-    public double getX();
+public interface IGame {
+    public Block[][] getGrid();
     
-    public double getY();
+    public List<IPlayer> getPlayers();
     
-    public int getHitpoints();
+    public List<IAbility> getAbilities();
 }

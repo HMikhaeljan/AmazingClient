@@ -144,34 +144,34 @@ public class LoginController implements Initializable {
     }
 
     //Create a new game
-    @FXML
-    public void CreateGame(Event evt) throws IOException {
-        if ((tfCreateGameName.getText().equals(""))) {
-            Alert alert = new Alert(AlertType.INFORMATION);
-            alert.setTitle("Information Dialog");
-            alert.setHeaderText("Please fill in game name");
-            alert.showAndWait();
-        } else {
-            System.out.println("Why does this not work");
-            fakegames.add(tfCreateGameName.getText());
-            fakegames.add("WTF");
-            initViews();
-            //stage.close();
-            AmazingClient a = new AmazingClient();
-            //stage = (Stage) btBeginLogIn.getScene().getWindow();
-            Stage stageAMazeIng = new Stage();
-            a.start(stageAMazeIng);
-            stageAMazeIng.show();
-
-//            stage.show();
-            //placeholder code//going back to the lobby // todo !!!!!!!!!!!!!!!!!!!!
-            /*stage = (Stage) btCreateCreateGame.getScene().getWindow();
-             root = FXMLLoader.load(getClass().getResource("Lobby.fxml"));
-             Scene scene = new Scene(root);
-             stage.setScene(scene);
-             stage.show();*/            //placeholder end
-        }
-    }
+//    @FXML
+//    public void CreateGame(Event evt) throws IOException {
+//        if ((tfCreateGameName.getText().equals(""))) {
+//            Alert alert = new Alert(AlertType.INFORMATION);
+//            alert.setTitle("Information Dialog");
+//            alert.setHeaderText("Please fill in game name");
+//            alert.showAndWait();
+//        } else {
+//            System.out.println("Why does this not work");
+//            fakegames.add(tfCreateGameName.getText());
+//            fakegames.add("WTF");
+//            initViews();
+//            //stage.close();
+//            AmazingClient a = new AmazingClient();
+//            //stage = (Stage) btBeginLogIn.getScene().getWindow();
+//            Stage stageAMazeIng = new Stage();
+//            a.start(stageAMazeIng);
+//            stageAMazeIng.show();
+//
+////            stage.show();
+//            //placeholder code//going back to the lobby // todo !!!!!!!!!!!!!!!!!!!!
+//            /*stage = (Stage) btCreateCreateGame.getScene().getWindow();
+//             root = FXMLLoader.load(getClass().getResource("Lobby.fxml"));
+//             Scene scene = new Scene(root);
+//             stage.setScene(scene);
+//             stage.show();*/            //placeholder end
+//        }
+//    }
 
     @FXML
     public void switchToCreateUser(Event evt) throws IOException {

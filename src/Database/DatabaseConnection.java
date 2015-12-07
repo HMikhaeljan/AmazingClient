@@ -5,8 +5,8 @@
  */
 package Database;
 
-import amazingclient.Ability;
-import amazingclient.PlayerRole;
+//import amazingclient.Ability;
+//import amazingclient.PlayerRole;
 import amazingclient.Stat;
 import amazingclient.User;
 import java.sql.*;
@@ -43,15 +43,15 @@ public class DatabaseConnection {
         return null;
     }
 
-    //todo
-    public List<PlayerRole> getRole() {
-        return null;
-    }
-
-    //todo
-    public List<Ability> getAbility() {
-        return null;
-    }
+//    //todo
+//    public List<PlayerRole> getRole() {
+//        return null;
+//    }
+//
+//    //todo
+//    public List<Ability> getAbility() {
+//        return null;
+//    }
 
     //test
     public String getUsername() throws SQLException {
