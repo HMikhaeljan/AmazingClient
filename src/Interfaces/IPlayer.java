@@ -5,14 +5,19 @@
  */
 package Interfaces;
 
+import java.rmi.RemoteException;
+
 /**
  *
  * @author Jeroen0606
  */
 public interface IPlayer {
-    public double getX();
+
+    public Double getX() throws RemoteException;
+
+    public Double getY() throws RemoteException;
+
+    public int getHitpoints() throws RemoteException;
     
-    public double getY();
-    
-    public int getHitpoints();
+    public Boolean getReady() throws RemoteException;
 }

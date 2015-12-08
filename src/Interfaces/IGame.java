@@ -6,16 +6,20 @@
 package Interfaces;
 
 import amazingclient.Block;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.util.List;
 
 /**
  *
  * @author Jeroen0606
  */
-public interface IGame {
-    public Block[][] getGrid();
+public interface IGame extends Remote{
+
+    public jdk.nashorn.internal.ir.Block[][] getGrid() throws RemoteException;
     
-    public List<IPlayer> getPlayers();
-    
-    public List<IAbility> getAbilities();
+    //todo
+    /*
+    public List<IPlayer> getPlayers() throws RemoteException;
+    */
 }

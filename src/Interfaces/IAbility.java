@@ -5,12 +5,18 @@
  */
 package Interfaces;
 
+import java.rmi.RemoteException;
+
 /**
  *
  * @author Jeroen0606
  */
 public interface IAbility {
-    public double getX();
-    
-    public double getY();
+
+    public Double getX() throws RemoteException;
+
+    public Double getY() throws RemoteException;
+
+    public int getCreatorID() throws RemoteException;
+
 }

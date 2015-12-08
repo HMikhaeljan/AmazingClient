@@ -6,15 +6,17 @@
 package Interfaces;
 
 import java.rmi.Remote;
+import java.rmi.RemoteException;
 
 /**
  *
  * @author Jeroen0606
  */
 public interface ILobbyController extends Remote {
-    public void startGame();
-    
-    public int getUserID();
-    
-    public boolean getReady();
+
+    public void startGame() throws RemoteException;
+
+    public int getUserID() throws RemoteException;
+
+    public boolean getReady() throws RemoteException;
 }

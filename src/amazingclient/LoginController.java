@@ -43,7 +43,7 @@ import javafx.stage.Stage;
 public class LoginController implements Initializable {
 
     DatabaseConnection db = new DatabaseConnection();
-    StartGame st = new StartGame();
+    AmazingClient st = new AmazingClient();
     private ObservableList<User> ObservableUsers;
     private ArrayList fakechat = new ArrayList();
     private ArrayList fakegames = new ArrayList();
