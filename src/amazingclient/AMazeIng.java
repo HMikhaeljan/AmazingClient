@@ -8,6 +8,7 @@ package amazingclient;
 import amazingsharedproject.Block;
 import amazingsharedproject.Interfaces.IGame;
 import amazingsharedproject.Sprite;
+import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -36,7 +37,12 @@ public class AMazeIng extends Application {
 
     public Scene scene;
     
-    //PlayerController
+    private Registry registry;
+    
+    public AMazeIng(Registry registry) {
+        this.registry = registry;
+    }
+    
     @Override
     public void start(Stage primaryStage) {
         Image imgWall = Sprite.LoadSprite("Resources/WallSprite.jpg", 16, 16);

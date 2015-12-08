@@ -62,7 +62,7 @@ public class LoginController implements Initializable {
     private static final String bindName = "Test";
     private Registry registry;
     //todo PAS DIT AAN
-    private static final String ip = "192.168.15.1";
+    private static final String ip = "169.254.161.102";
 
     //Login
     @FXML
@@ -173,35 +173,36 @@ public class LoginController implements Initializable {
         stage.show();
     }
 
-    //Create a new game
-//    @FXML
-//    public void CreateGame(Event evt) throws IOException {
-//        if ((tfCreateGameName.getText().equals(""))) {
-//            Alert alert = new Alert(AlertType.INFORMATION);
-//            alert.setTitle("Information Dialog");
-//            alert.setHeaderText("Please fill in game name");
-//            alert.showAndWait();
-//        } else {
-//            System.out.println("Why does this not work");
-//            fakegames.add(tfCreateGameName.getText());
-//            fakegames.add("WTF");
-//            initViews();
-//            //stage.close();
-//            AmazingClient a = new AmazingClient();
-//            //stage = (Stage) btBeginLogIn.getScene().getWindow();
-//            Stage stageAMazeIng = new Stage();
-//            a.start(stageAMazeIng);
-//            stageAMazeIng.show();
-//
-////            stage.show();
-//            //placeholder code//going back to the lobby // todo !!!!!!!!!!!!!!!!!!!!
-//            /*stage = (Stage) btCreateCreateGame.getScene().getWindow();
-//             root = FXMLLoader.load(getClass().getResource("Lobby.fxml"));
-//             Scene scene = new Scene(root);
-//             stage.setScene(scene);
-//             stage.show();*/            //placeholder end
-//        }
-//    }
+//    Create a new game
+    @FXML
+    public void CreateGame(Event evt) throws IOException {
+        if ((tfCreateGameName.getText().equals(""))) {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Information Dialog");
+            alert.setHeaderText("Please fill in game name");
+            alert.showAndWait();
+        } else {
+            System.out.println("Why does this not work");
+            fakegames.add(tfCreateGameName.getText());
+            fakegames.add("WTF");
+            initViews();
+            //stage.close();
+            AMazeIng amazeing = new AMazeIng(registry);
+            //stage = (Stage) btBeginLogIn.getScene().getWindow();
+            Stage stageAMazeIng = new Stage();
+            amazeing.start(stageAMazeIng);
+            stageAMazeIng.show();
+
+//            stage.show();
+            //placeholder code//going back to the lobby // todo !!!!!!!!!!!!!!!!!!!!
+            /*stage = (Stage) btCreateCreateGame.getScene().getWindow();
+             root = FXMLLoader.load(getClass().getResource("Lobby.fxml"));
+             Scene scene = new Scene(root);
+             stage.setScene(scene);
+             stage.show();*/            //placeholder end
+        }
+    }
+    
     @FXML
     public void switchToCreateUser(Event evt) throws IOException {
         stage = (Stage) btBeginLogIn.getScene().getWindow();
