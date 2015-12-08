@@ -10,6 +10,9 @@ import Database.DatabaseConnection;
 import java.awt.Dialog;
 import java.io.IOException;
 import java.net.URL;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -50,6 +53,13 @@ public class LoginController implements Initializable {
     String chatinfo = "Welkom bij Amazing chat";
     Stage stage;
     Parent root;
+    
+    //RMI:
+    private static final int port = 1099;
+    private static final String bindName = "Test";
+    private Registry registry;
+    //todo PAS DIT AAN
+    private static final String ip = "169.254.161.102";    
 
     //Login
     @FXML
@@ -105,7 +115,6 @@ public class LoginController implements Initializable {
         this.lvLobbyUsers.setItems(this.ObservableUsers);
         this.lvLobbyChat.setItems(this.ObservableChat);
         this.lvLobbyGames.setItems(this.ObservableGames);
-
     }
 
     private void fillPlayerList() throws SQLException {
@@ -131,6 +140,12 @@ public class LoginController implements Initializable {
 
                 System.out.println("Naam:" + db.getUsername() + "\nPassword: " + db.getPassword());
             }
+        }
+        
+        try {
+            registry = LocateRegistry.getRegistry(ip, port);
+        } catch (RemoteException e) {
+            System.out.println("Kan registry niet vinden: " + e.getMessage());
         }
     }
 

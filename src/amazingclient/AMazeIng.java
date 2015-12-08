@@ -35,17 +35,9 @@ import javafx.stage.Stage;
  */
 public class AMazeIng extends Application {
 
-    static int spritesize = 16;    
-
-    public Image imgCharacter;
-    public Node nodCharacter;
-
-    public Image imgEnemy;
-    public Node nodEnemy;
+    static int spritesize = 16;
 
     public Node sppp;
-
-    private String key;
 
     public Group group;
 
@@ -54,35 +46,10 @@ public class AMazeIng extends Application {
     private IGame game;
 
     public Scene scene;
-    //public EnemyController eController;
-
-    //Moving checks
-    public List<Node> solidBlocks;
-
-    public Node playerPos;
-
-    public Boolean collision;
-
-    public Node tempNode;
-
-    //enemie moving checks
-    public Node enemyPos;
-    public Boolean enemyCollision;
-    public Node tempNodeEnemy;
-
-    int leftCount = 0;
-    int rightCount = 0;
-    int upCount = 0;
-    int downCount = 0;
-
-    //Player Abilities
-
     
     //PlayerController
     @Override
     public void start(Stage primaryStage) {
-        solidBlocks = new ArrayList<Node>();
-
         Image imgWall = Sprite.LoadSprite("Resources/WallSprite.jpg", 16, 16);
         Node nodWall = new ImageView(imgWall);
         Group groupWall = new Group(nodWall);
@@ -102,7 +69,6 @@ public class AMazeIng extends Application {
                         Node wpos = new ImageView(sol);
                         wpos.relocate(x * spritesize, y * spritesize);
                         nodes.add(wpos);
-                        solidBlocks.add(wpos);
                         break;
                     case OPEN:
                         Image ope = Sprite.LoadSprite("Resources/FloorSprite.jpg", 16, 16);
@@ -117,7 +83,6 @@ public class AMazeIng extends Application {
                         Node sppp = new ImageView(spp);
                         sppp.relocate(x * spritesize, y * spritesize);
                         nodes.add(sppp);
-                        //TO DO: spawnPoints.add(sppp);
                         break;
                     case EDGE:
                         Image edg = Sprite.LoadSprite("Resources/MapEdge.jpg", 16, 16);
@@ -126,13 +91,12 @@ public class AMazeIng extends Application {
                         edgp.relocate(x * spritesize, y * spritesize);
                         nodes.add(edgp);
                         break;
-
                 }
             }
         }
 
         group = new Group(nodes);
-        scene = new Scene(group, testmaze.getGridSize() * spritesize, testmaze.getGridSize() * spritesize, Color.DARKSALMON);
+        scene = new Scene(group, mazegrid.length * spritesize, mazegrid.length * spritesize, Color.DARKSALMON);
         primaryStage.setTitle("Pathfinding");
         primaryStage.setScene(scene);
         primaryStage.show();        
