@@ -62,7 +62,9 @@ public class LoginController implements Initializable {
     private static final String bindName = "Test";
     private Registry registry;
     //todo PAS DIT AAN
-    private static final String ip = "169.254.161.102";
+    private static final String ip = "169.254.174.77";
+    
+    User user;
 
     //Login
     @FXML
@@ -145,7 +147,8 @@ public class LoginController implements Initializable {
         }
 
         if (loginIn.Login(tfBeginUsername.getText(), tfBeginPassword.getText()) != null) {
-
+            user = loginIn.Login(tfBeginUsername.getText(), tfBeginPassword.getText());
+            LobbySession.user = user;
             stage = (Stage) btBeginLogIn.getScene().getWindow();
             root = FXMLLoader.load(getClass().getResource("Lobby.fxml"));
             Scene scene = new Scene(root);
@@ -175,19 +178,18 @@ public class LoginController implements Initializable {
 
 //    Create a new game
     @FXML
-    public void CreateGame(Event evt) throws IOException {
+    public void CreateGame(Event evt) throws IOException, NotBoundException {
         if ((tfCreateGameName.getText().equals(""))) {
             Alert alert = new Alert(AlertType.INFORMATION);
             alert.setTitle("Information Dialog");
             alert.setHeaderText("Please fill in game name");
             alert.showAndWait();
         } else {
-            System.out.println("Why does this not work");
             fakegames.add(tfCreateGameName.getText());
             fakegames.add("WTF");
             initViews();
             //stage.close();
-            AMazeIng amazeing = new AMazeIng(registry);
+            AMazeIng amazeing = new AMazeIng();
             //stage = (Stage) btBeginLogIn.getScene().getWindow();
             Stage stageAMazeIng = new Stage();
             amazeing.start(stageAMazeIng);
@@ -223,5 +225,4 @@ public class LoginController implements Initializable {
         initViews();
         tfLobbyChat.clear();
     }
-
 }

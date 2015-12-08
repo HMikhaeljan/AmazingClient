@@ -5,9 +5,15 @@
  */
 package amazingclient;
 
+import Interfaces.ILogin;
+import UserPackage.User;
 import amazingsharedproject.Block;
 import amazingsharedproject.Interfaces.IGame;
+import amazingsharedproject.Interfaces.IGameManager;
 import amazingsharedproject.Sprite;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import javafx.application.Application;
@@ -33,23 +39,48 @@ public class AMazeIng extends Application {
 
     public ArrayList<Node> nodes;
     
+    private IGameManager gamemanager;
+    
     private IGame game;
 
     public Scene scene;
     
-    private Registry registry;
+    private Block[][] mazegrid;
     
-    public AMazeIng(Registry registry) {
-        this.registry = registry;
+    private User user;
+    
+    //RMI:
+    private static final int port = 1099;
+    private static final String bindName = "Test";
+    private Registry registry;
+    //todo PAS DIT AAN
+    private static final String ip = "169.254.174.77";
+    
+    public AMazeIng () {
     }
     
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws NotBoundException, RemoteException {
+        try {
+            registry = LocateRegistry.getRegistry(ip, port);
+        } catch (RemoteException e) {
+            System.out.println("Kan registry niet vinden: " + e.getMessage());
+        }
+        
+        try {
+            gamemanager = (IGameManager)registry.lookup("GameManager");
+        } catch (RemoteException d) {
+            System.out.println("Kan registry niet vinden: " + d.getMessage());
+        }
+        System.out.println(gamemanager);
+        System.out.println(gamemanager.newLobby(LobbySession.user.getUserID()));
+        
+        game = gamemanager.newLobby(LobbySession.user.getUserID());
+        mazegrid = game.getGrid();
+        
         Image imgWall = Sprite.LoadSprite("Resources/WallSprite.jpg", 16, 16);
         Node nodWall = new ImageView(imgWall);
-        Group groupWall = new Group(nodWall);
-
-        Block[][] mazegrid = new Block[5][10];
+        Group groupWall = new Group(nodWall);        
 
         //Create list of all the block images
         ArrayList<Image> images = new ArrayList<Image>();
