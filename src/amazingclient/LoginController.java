@@ -5,11 +5,12 @@
  */
 package amazingclient;
 
-
 import Database.DatabaseConnection;
+import Interfaces.ILogin;
 import UserPackage.User;
 import java.io.IOException;
 import java.net.URL;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -26,7 +27,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -40,6 +44,8 @@ import javafx.stage.Stage;
 public class LoginController implements Initializable {
 
     DatabaseConnection db = new DatabaseConnection();
+
+    ILogin loginIn;
     AmazingClient st = new AmazingClient();
     private ObservableList<User> ObservableUsers;
     private ArrayList fakechat = new ArrayList();
@@ -50,13 +56,13 @@ public class LoginController implements Initializable {
     String chatinfo = "Welkom bij Amazing chat";
     Stage stage;
     Parent root;
-    
+
     //RMI:
     private static final int port = 1099;
     private static final String bindName = "Test";
     private Registry registry;
     //todo PAS DIT AAN
-    private static final String ip = "169.254.161.102";    
+    private static final String ip = "192.168.15.1";
 
     //Login
     @FXML
@@ -124,26 +130,38 @@ public class LoginController implements Initializable {
      /Check of de naam in de database gelijk is aan de textveld tfBeginUsername
      */
     @FXML
-    public void Login(Event evt) throws IOException, SQLException {
+    public void Login(Event evt) throws IOException, SQLException, NotBoundException {
 
-        for (User user : db.getUsers()) {
-            if (tfBeginUsername.getText().equals(user.getName()) && tfBeginPassword.getText().equals(user.getPassword())) {
-
-                stage = (Stage) btBeginLogIn.getScene().getWindow();
-                root = FXMLLoader.load(getClass().getResource("Lobby.fxml"));
-                Scene scene = new Scene(root);
-                stage.setScene(scene);
-                stage.show();
-
-                System.out.println("Naam:" + db.getUsername() + "\nPassword: " + db.getPassword());
-            }
-        }
-        
+        // loginIn.Login(tfBeginUsername.getText(), tfBeginPassword.getText());
         try {
             registry = LocateRegistry.getRegistry(ip, port);
         } catch (RemoteException e) {
             System.out.println("Kan registry niet vinden: " + e.getMessage());
         }
+        try {
+            loginIn = (ILogin) registry.lookup("UserManager");
+        } catch (RemoteException d) {
+            System.out.println("Kan registry niet vinden: " + d.getMessage());
+        }
+
+        if (loginIn.Login(tfBeginUsername.getText(), tfBeginPassword.getText()) != null) {
+
+            stage = (Stage) btBeginLogIn.getScene().getWindow();
+            root = FXMLLoader.load(getClass().getResource("Lobby.fxml"));
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } else {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Information");
+            alert.setHeaderText(null);
+            alert.setContentText("Please enter correct name and password");
+
+            alert.showAndWait();
+        }
+
+        System.out.println("Naam:" + db.getUsername() + "\nPassword: " + db.getPassword());
+
     }
 
     @FXML
@@ -184,7 +202,6 @@ public class LoginController implements Initializable {
 //             stage.show();*/            //placeholder end
 //        }
 //    }
-
     @FXML
     public void switchToCreateUser(Event evt) throws IOException {
         stage = (Stage) btBeginLogIn.getScene().getWindow();
