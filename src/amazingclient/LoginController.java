@@ -30,7 +30,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -43,7 +42,6 @@ import javafx.stage.Stage;
  */
 public class LoginController implements Initializable {
 
-    DatabaseConnection db = new DatabaseConnection();
 
     ILogin loginIn;
     AmazingClient st = new AmazingClient();
@@ -62,7 +60,7 @@ public class LoginController implements Initializable {
     private static final String bindName = "Test";
     private Registry registry;
     //todo PAS DIT AAN
-    private static final String ip = "192.168.15.1";
+    private static final String ip = "169.254.123.210";
 
     //Login
     @FXML
@@ -104,13 +102,15 @@ public class LoginController implements Initializable {
         fakegames.add("Games");
         try {
             fillPlayerList();
-        } catch (SQLException ex) {
+        } catch (SQLException | RemoteException ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
         initViews();
 
     }
 
+
+    
     private void initViews() {
         ObservableChat = FXCollections.observableArrayList(this.fakechat);
         ObservableGames = FXCollections.observableArrayList(this.fakegames);
@@ -120,8 +120,8 @@ public class LoginController implements Initializable {
         this.lvLobbyGames.setItems(this.ObservableGames);
     }
 
-    private void fillPlayerList() throws SQLException {
-        for (User user : db.getUsers()) {
+    private void fillPlayerList() throws SQLException, RemoteException {
+        for (User user : loginIn.getOnlineUsers()) {
             playerList.add(user.getName());
         }
     }
@@ -131,8 +131,6 @@ public class LoginController implements Initializable {
      */
     @FXML
     public void Login(Event evt) throws IOException, SQLException, NotBoundException {
-
-        // loginIn.Login(tfBeginUsername.getText(), tfBeginPassword.getText());
         try {
             registry = LocateRegistry.getRegistry(ip, port);
         } catch (RemoteException e) {
@@ -159,8 +157,6 @@ public class LoginController implements Initializable {
 
             alert.showAndWait();
         }
-
-        System.out.println("Naam:" + db.getUsername() + "\nPassword: " + db.getPassword());
 
     }
 
@@ -212,8 +208,13 @@ public class LoginController implements Initializable {
     }
 
     @FXML
-    public void newUser(Event evt) throws SQLException {
-        db.newUser(tfNewUserUsername.getText(), tfNewUserPassword.getText());
+    public void newUser(Event evt) throws SQLException, RemoteException {
+        loginIn.registerUser(tfNewUserUsername.getText(), tfNewUserPassword.getText());
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Information");
+        alert.setHeaderText(null);
+        alert.setContentText(tfNewUserUsername.getText() + " your account has been succesfully created" );
+        alert.showAndWait();
     }
 
     //Send a message to the chat. Adding it to the fakechat.
