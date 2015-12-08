@@ -7,7 +7,7 @@ package amazingclient;
 
 
 import Database.DatabaseConnection;
-import java.awt.Dialog;
+import UserPackage.User;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
@@ -20,15 +20,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
@@ -130,7 +127,7 @@ public class LoginController implements Initializable {
     public void Login(Event evt) throws IOException, SQLException {
 
         for (User user : db.getUsers()) {
-            if (tfBeginUsername.getText().equals(user.getName()) && tfBeginPassword.getText().equals(user.getEmail())) {
+            if (tfBeginUsername.getText().equals(user.getName()) && tfBeginPassword.getText().equals(user.getPassword())) {
 
                 stage = (Stage) btBeginLogIn.getScene().getWindow();
                 root = FXMLLoader.load(getClass().getResource("Lobby.fxml"));

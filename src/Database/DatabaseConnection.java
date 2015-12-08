@@ -7,8 +7,9 @@ package Database;
 
 //import amazingclient.Ability;
 //import amazingclient.PlayerRole;
-import amazingclient.Stat;
-import amazingclient.User;
+
+import UserPackage.Stat;
+import UserPackage.User;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
