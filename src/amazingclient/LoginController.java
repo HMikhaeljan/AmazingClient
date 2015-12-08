@@ -5,9 +5,8 @@
  */
 package amazingclient;
 
-import Database.DatabaseConnection;
-import Interfaces.ILogin;
-import UserPackage.User;
+import amazingsharedproject.Interfaces.ILogin;
+import amazingsharedproject.User;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.NotBoundException;
@@ -42,7 +41,6 @@ import javafx.stage.Stage;
  */
 public class LoginController implements Initializable {
 
-
     ILogin loginIn;
     AmazingClient st = new AmazingClient();
     private ObservableList<User> ObservableUsers;
@@ -60,13 +58,9 @@ public class LoginController implements Initializable {
     private static final String bindName = "Test";
     private Registry registry;
     //todo PAS DIT AAN
-<<<<<<< HEAD
-    private static final String ip = "169.254.123.210";
-=======
-    private static final String ip = "169.254.174.77";
-    
+    private static final String ip = "192.168.15.1";
+
     User user;
->>>>>>> origin/master
 
     //Login
     @FXML
@@ -104,6 +98,20 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        try {
+            registry = LocateRegistry.getRegistry(ip, port);
+        } catch (RemoteException e) {
+            System.out.println("Kan registry niet vinden: " + e.getMessage());
+        }
+
+        try {
+            loginIn = (ILogin) registry.lookup("UserManager");
+        } catch (RemoteException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotBoundException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         fakechat.add(chatinfo);
         fakegames.add("Games");
         try {
@@ -115,8 +123,6 @@ public class LoginController implements Initializable {
 
     }
 
-
-    
     private void initViews() {
         ObservableChat = FXCollections.observableArrayList(this.fakechat);
         ObservableGames = FXCollections.observableArrayList(this.fakegames);
@@ -127,8 +133,12 @@ public class LoginController implements Initializable {
     }
 
     private void fillPlayerList() throws SQLException, RemoteException {
-        for (User user : loginIn.getOnlineUsers()) {
-            playerList.add(user.getName());
+        if (loginIn.getOnlineUsers() != null) {
+            for (User user : loginIn.getOnlineUsers()) {
+                playerList.add(user.getName());
+            }
+        } else {
+            System.out.println("no users online");
         }
     }
 
@@ -137,19 +147,9 @@ public class LoginController implements Initializable {
      */
     @FXML
     public void Login(Event evt) throws IOException, SQLException, NotBoundException {
-        try {
-            registry = LocateRegistry.getRegistry(ip, port);
-        } catch (RemoteException e) {
-            System.out.println("Kan registry niet vinden: " + e.getMessage());
-        }
-        try {
-            loginIn = (ILogin) registry.lookup("UserManager");
-        } catch (RemoteException d) {
-            System.out.println("Kan registry niet vinden: " + d.getMessage());
-        }
-
         if (loginIn.Login(tfBeginUsername.getText(), tfBeginPassword.getText()) != null) {
             user = loginIn.Login(tfBeginUsername.getText(), tfBeginPassword.getText());
+            loginIn.addToOnline(user);
             LobbySession.user = user;
             stage = (Stage) btBeginLogIn.getScene().getWindow();
             root = FXMLLoader.load(getClass().getResource("Lobby.fxml"));
@@ -176,7 +176,6 @@ public class LoginController implements Initializable {
         stage.show();
     }
 
-<<<<<<< HEAD
     //Create a new game
 //    @FXML
 //    public void CreateGame(Event evt) throws IOException {
@@ -206,7 +205,6 @@ public class LoginController implements Initializable {
 //             stage.show();*/            //placeholder end
 //        }
 //    }
-=======
 //    Create a new game
     @FXML
     public void CreateGame(Event evt) throws IOException, NotBoundException {
@@ -235,8 +233,7 @@ public class LoginController implements Initializable {
              stage.show();*/            //placeholder end
         }
     }
-    
->>>>>>> origin/master
+
     @FXML
     public void switchToCreateUser(Event evt) throws IOException {
         stage = (Stage) btBeginLogIn.getScene().getWindow();
@@ -252,7 +249,7 @@ public class LoginController implements Initializable {
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("Information");
         alert.setHeaderText(null);
-        alert.setContentText(tfNewUserUsername.getText() + " your account has been succesfully created" );
+        alert.setContentText(tfNewUserUsername.getText() + " your account has been succesfully created");
         alert.showAndWait();
     }
 

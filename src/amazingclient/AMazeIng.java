@@ -5,21 +5,16 @@
  */
 package amazingclient;
 
-import Interfaces.ILogin;
-import UserPackage.User;
 import amazingsharedproject.Block;
 import amazingsharedproject.Interfaces.IGame;
 import amazingsharedproject.Interfaces.IGameManager;
 import amazingsharedproject.Sprite;
-<<<<<<< HEAD
-=======
+import amazingsharedproject.User;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
->>>>>>> origin/master
 import java.util.ArrayList;
-import java.util.List;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -27,7 +22,6 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -52,9 +46,8 @@ public class AMazeIng extends Application {
 
     public Scene scene;
     
-<<<<<<< HEAD
+
     //PlayerController
-=======
     private Block[][] mazegrid;
     
     private User user;
@@ -69,7 +62,7 @@ public class AMazeIng extends Application {
     public AMazeIng () {
     }
     
->>>>>>> origin/master
+
     @Override
     public void start(Stage primaryStage) throws NotBoundException, RemoteException {
         try {
@@ -87,7 +80,9 @@ public class AMazeIng extends Application {
         System.out.println(gamemanager.newLobby(LobbySession.user.getUserID()));
         
         game = gamemanager.newLobby(LobbySession.user.getUserID());
-        mazegrid = game.getGrid();
+        
+        //TODO FIX THIS JEROEN!!!
+        //mazegrid = game.getGrid();
         
         Image imgWall = Sprite.LoadSprite("Resources/WallSprite.jpg", 16, 16);
         Node nodWall = new ImageView(imgWall);

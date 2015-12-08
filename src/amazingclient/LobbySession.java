@@ -4,8 +4,7 @@
  * and open the template in the editor.
  */
 package amazingclient;
-
-import UserPackage.User;
+import amazingsharedproject.User;
 
 /**
  *
