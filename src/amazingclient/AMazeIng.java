@@ -16,12 +16,16 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
+import java.util.List;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -125,7 +129,24 @@ public class AMazeIng extends Application {
         scene = new Scene(group, mazegrid.length * spritesize, mazegrid.length * spritesize, Color.DARKSALMON);
         primaryStage.setTitle("Pathfinding");
         primaryStage.setScene(scene);
-        primaryStage.show();        
+        primaryStage.show();
+        
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+
+            @Override
+            public void handle(KeyEvent event) {
+                 switch (event.getCode()) {
+                     case LEFT: break;
+                     case RIGHT: break;
+                     case UP: break;
+                     case DOWN: break;
+                     case DIGIT1: break;
+                     case DIGIT2: break;
+                     case DIGIT3: break;
+                     case DIGIT4: break;            
+                 }
+            }
+        });
     }
 
     /**
