@@ -58,7 +58,7 @@ public class LoginController implements Initializable {
     private static final String bindName = "Test";
     private Registry registry;
     //todo PAS DIT AAN
-    private static final String ip = "145.93.82.185";
+    private static final String ip = "192.168.44.1";
 
     User user;
 
