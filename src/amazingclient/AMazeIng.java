@@ -8,6 +8,7 @@ package amazingclient;
 import amazingsharedproject.Block;
 import amazingsharedproject.Interfaces.IGame;
 import amazingsharedproject.Interfaces.IGameManager;
+import amazingsharedproject.Player;
 import amazingsharedproject.Sprite;
 import amazingsharedproject.User;
 import java.rmi.NotBoundException;
@@ -15,6 +16,10 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -22,6 +27,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -46,18 +52,19 @@ public class AMazeIng extends Application {
 
     public Scene scene;
     
+    private List<KeyCode> keys;
+    
+    private AnimationTimer controlsTimer;
 
     //PlayerController
     private Block[][] mazegrid;
-    
-    private User user;
     
     //RMI:
     private static final int port = 1099;
     private static final String bindName = "Test";
     private Registry registry;
     //todo PAS DIT AAN
-    private static final String ip = "169.254.174.77";
+    private static final String ip = "145.93.82.185";
     
     public AMazeIng () {
     }
@@ -80,6 +87,10 @@ public class AMazeIng extends Application {
         System.out.println(gamemanager.newLobby(LobbySession.user.getUserID()));
         
         game = gamemanager.newLobby(LobbySession.user.getUserID());
+
+        keys = new ArrayList<KeyCode>();
+        
+        mazegrid = game.getGrid();
         
         //TODO FIX THIS JEROEN!!!
         //mazegrid = game.getGrid();
@@ -91,7 +102,7 @@ public class AMazeIng extends Application {
         //Create list of all the block images
         ArrayList<Image> images = new ArrayList<Image>();
         nodes = new ArrayList<Node>();
-
+        System.out.println("Mazegrid: " + mazegrid.length);
         for (int y = 0; y < mazegrid.length; y++) {
             for (int x = 0; x < mazegrid.length; x++) {
                 switch (mazegrid[y][x]) {
@@ -137,18 +148,52 @@ public class AMazeIng extends Application {
 
             @Override
             public void handle(KeyEvent event) {
-                 switch (event.getCode()) {
-                     case LEFT: break;
-                     case RIGHT: break;
-                     case UP: break;
-                     case DOWN: break;
-                     case DIGIT1: break;
-                     case DIGIT2: break;
-                     case DIGIT3: break;
-                     case DIGIT4: break;            
+                switch (event.getCode()) {
+                    case LEFT: if (!keys.contains(KeyCode.LEFT)) keys.add(KeyCode.LEFT); break;                        
+                     case RIGHT: if (!keys.contains(KeyCode.RIGHT)) keys.add(KeyCode.RIGHT); break;
+                     case UP: if (!keys.contains(KeyCode.UP)) keys.add(KeyCode.UP); break;
+                     case DOWN: if (!keys.contains(KeyCode.DOWN)) keys.add(KeyCode.DOWN); break;
+                     case DIGIT1: if (!keys.contains(KeyCode.DIGIT1)) keys.add(KeyCode.DIGIT1); break;
+                     case DIGIT2: if (!keys.contains(KeyCode.DIGIT2)) keys.add(KeyCode.DIGIT2); break;
+                     case DIGIT3: if (!keys.contains(KeyCode.DIGIT3)) keys.add(KeyCode.DIGIT3); break;
+                     case DIGIT4: if (!keys.contains(KeyCode.DIGIT4)) keys.add(KeyCode.DIGIT4); break;            
                  }
             }
+            
+            
         });
+        
+        scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
+
+            @Override
+            public void handle(KeyEvent event) {
+                switch (event.getCode()) {
+                    case LEFT: keys.remove(KeyCode.LEFT); break;                        
+                     case RIGHT: keys.remove(KeyCode.RIGHT); break;
+                     case UP: keys.remove(KeyCode.UP); break;
+                     case DOWN: keys.remove(KeyCode.DOWN); break;
+                     case DIGIT1: keys.remove(KeyCode.DIGIT1); break;
+                     case DIGIT2: keys.remove(KeyCode.DIGIT2); break;
+                     case DIGIT3: keys.remove(KeyCode.DIGIT3); break;
+                     case DIGIT4: keys.remove(KeyCode.DIGIT4); break;            
+                 }                  
+            }
+        });
+        
+        controlsTimer = new playerAnim();
+        controlsTimer.start();
+    }
+    
+    private class playerAnim extends AnimationTimer
+    {
+        @Override
+        public void handle(long now) {
+                try {
+                    game.handleInput(game.getPlayer(LobbySession.user.getUserID()).getID(), keys);
+                } catch (RemoteException ex) {
+                    Logger.getLogger(AMazeIng.class.getName()).log(Level.SEVERE, null, ex);
+                }
+        }
     }
 
     /**
