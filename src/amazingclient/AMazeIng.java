@@ -155,6 +155,7 @@ public class AMazeIng extends Application {
                     player1 = game.getGameState().getPlayers().get(0);
                     nodePlayer1 = new ImageView(new PlayerRole(game.getGameState().getPlayers().get(0).getPlayerRoleID()).getImage(Direction.UP));
                     nodes.add(nodePlayer1);
+                    game.setReady(player1.getID(), true);
                     player1 = game.getGameState().getPlayers().get(0);
                     nodePlayer1.setLayoutX(player1.getX());
                     nodePlayer1.setLayoutY(player1.getY());
@@ -167,6 +168,8 @@ public class AMazeIng extends Application {
                     nodePlayer2 = new ImageView(new PlayerRole(game.getGameState().getPlayers().get(1).getPlayerRoleID()).getImage(Direction.UP));
                     nodes.add(nodePlayer1);
                     nodes.add(nodePlayer2);
+                    nodePlayer1.setLayoutX(player1.getX());
+                    nodePlayer1.setLayoutY(player1.getY());
                     break;
                     
                 case 3:
