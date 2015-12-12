@@ -107,7 +107,6 @@ public class AMazeIng extends Application {
         Image imgWall = Sprite.LoadSprite("Resources/WallSprite.jpg", 16, 16);
         Node nodWall = new ImageView(imgWall);
         Group groupWall = new Group(nodWall);
-
         //Create list of all the block images
         ArrayList<Image> images = new ArrayList<Image>();
         nodes = new ArrayList<Node>();
@@ -305,8 +304,10 @@ public class AMazeIng extends Application {
         @Override
         public void handle(long now) {
             try {
-                if(keys.size() >= 1)
+                if(keys.size() > 0) {
                     game.handleInput(game.getPlayer(LobbySession.user.getUserID()).getID(), keys);
+                }
+                
                 gs = game.getGameState();
                 for(Player p : gs.getPlayers()) {
                     if(p.getID() == player1.getID())
@@ -320,12 +321,26 @@ public class AMazeIng extends Application {
                         player4 = p;*/
                     
                     nodePlayer1.relocate(player1.getX(), player1.getY());
+                    nodePlayer1.setRotate(getRot(player1.getDirection()));
                 }
             } catch (RemoteException ex) {
                 Logger.getLogger(AMazeIng.class.getName()).log(Level.SEVERE, null, ex);
             }  
             System.out.println("X: " + gs.getPlayers().get(0).getX() + "Y: " + gs.getPlayers().get(0).getY());
             
+        }
+        private double getRot(Direction d) {
+            switch(d) {
+                case UP:
+                    return 0;
+                case DOWN:
+                    return 180;
+                case RIGHT:
+                    return 90;
+                case LEFT:
+                    return 270;
+            }
+            return 0;
         }
     }
 
