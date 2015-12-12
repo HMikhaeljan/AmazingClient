@@ -75,7 +75,7 @@ public class AMazeIng extends Application {
     private static final String bindName = "Test";
     private Registry registry;
     //todo PAS DIT AAN
-    private static final String ip = "192.168.44.1";
+    private static final String ip = "192.168.9.1";
 
     public AMazeIng() {
     }
@@ -301,14 +301,31 @@ public class AMazeIng extends Application {
 
     private class playerAnim extends AnimationTimer {
 
+        GameState gs;
         @Override
         public void handle(long now) {
             try {
-                game.handleInput(game.getPlayer(LobbySession.user.getUserID()).getID(), keys);
+                if(keys.size() >= 1)
+                    game.handleInput(game.getPlayer(LobbySession.user.getUserID()).getID(), keys);
+                gs = game.getGameState();
+                for(Player p : gs.getPlayers()) {
+                    if(p.getID() == player1.getID())
+                        player1 = p;
+                    /*
+                    if(p.getID() == player2.getID())
+                        player2 = p;
+                    if(p.getID() == player3.getID())
+                        player3 = p;
+                    if(p.getID() == player4.getID())
+                        player4 = p;*/
+                    
+                    nodePlayer1.relocate(player1.getX(), player1.getY());
+                }
             } catch (RemoteException ex) {
                 Logger.getLogger(AMazeIng.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
+            }  
+            System.out.println("X: " + gs.getPlayers().get(0).getX() + "Y: " + gs.getPlayers().get(0).getY());
+            
         }
     }
 
