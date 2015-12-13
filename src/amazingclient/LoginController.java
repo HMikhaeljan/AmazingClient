@@ -5,10 +5,13 @@
  */
 package amazingclient;
 
+import amazingsharedproject.Interfaces.IGame;
+import amazingsharedproject.Interfaces.IGameManager;
 import amazingsharedproject.Interfaces.ILogin;
 import amazingsharedproject.User;
 import java.io.IOException;
 import java.net.URL;
+import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -29,6 +32,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -43,24 +47,30 @@ public class LoginController implements Initializable {
 
     ILogin loginIn;
     AmazingClient st = new AmazingClient();
-    private ObservableList<User> ObservableUsers;
-    private ArrayList fakechat = new ArrayList();
-    private ArrayList fakegames = new ArrayList();
+
+    private ArrayList lobbyChat = new ArrayList();
+    private ArrayList gameList = new ArrayList();
     private ArrayList playerList = new ArrayList();
-    private ObservableList ObservableChat;
+    private ArrayList gameLobbyChat = new ArrayList();
+
+    private ObservableList ObservableLobbyChat;
     private ObservableList ObservableGames;
+    private ObservableList<User> ObservableUsers;
+    private ObservableList ObservableGameLobbyChat;
+
+    String gameName = "";
     String chatinfo = "Welkom bij Amazing chat";
     Stage stage;
     Parent root;
+    User user;
 
     //RMI:
     private static final int port = 1099;
     private static final String bindName = "Test";
     private Registry registry;
+    private IGameManager gameManager;
     //todo PAS DIT AAN
-    private static final String ip = "192.168.9.1";
-
-    User user;
+    private static final String ip = "192.168.15.1";
 
     //Login
     @FXML
@@ -78,6 +88,8 @@ public class LoginController implements Initializable {
     @FXML
     private Button btLobbyCreateGame;
     @FXML
+    private Button BtLobbyRefresh;
+    @FXML
     private ListView lvLobbyGames = new ListView();
     @FXML
     private ListView lvLobbyChat = new ListView();
@@ -85,6 +97,22 @@ public class LoginController implements Initializable {
     //Create game
     @FXML
     private TextField tfCreateGameName;
+
+    //GameLobby
+    @FXML
+    private ListView lvGamePlayer = new ListView();
+    @FXML
+    private ListView lvGameChat = new ListView();
+    @FXML
+    private TextArea TaGameChat;
+    @FXML
+    private Button BtGameSendChat;
+    @FXML
+    private Button BtGameReady;
+    @FXML
+    private Button BtGameStartGame;
+    @FXML
+    private Label LbGameName = new Label();
 
     //Create User
     @FXML
@@ -96,8 +124,7 @@ public class LoginController implements Initializable {
     @FXML
     private Button btCreateAccount;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public LoginController() {
         try {
             registry = LocateRegistry.getRegistry(ip, port);
         } catch (RemoteException e) {
@@ -106,36 +133,71 @@ public class LoginController implements Initializable {
 
         try {
             loginIn = (ILogin) registry.lookup("UserManager");
-        } catch (RemoteException ex) {
+        } catch (RemoteException | NotBoundException ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+        lobbyChat.add(chatinfo);
+        gameLobbyChat.add("Game Lobby");
+
+        try {
+            gameManager = (IGameManager) registry.lookup("GameManager");
+        } catch (RemoteException d) {
+            System.out.println("Kan registry niet vinden: " + d.getMessage());
         } catch (NotBoundException ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        fakechat.add(chatinfo);
-        fakegames.add("Games");
         try {
-            fillPlayerList();
-        } catch (SQLException | RemoteException ex) {
+            refreshList();
+        } catch (SQLException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        initViews();
 
     }
 
+    @FXML
     private void initViews() {
-        ObservableChat = FXCollections.observableArrayList(this.fakechat);
-        ObservableGames = FXCollections.observableArrayList(this.fakegames);
         ObservableUsers = FXCollections.observableArrayList(this.playerList);
+        ObservableGames = FXCollections.observableArrayList(this.gameList);
+        ObservableLobbyChat = FXCollections.observableArrayList(this.lobbyChat);
+        ObservableGameLobbyChat = FXCollections.observableArrayList(this.gameLobbyChat);
+
         this.lvLobbyUsers.setItems(this.ObservableUsers);
-        this.lvLobbyChat.setItems(this.ObservableChat);
         this.lvLobbyGames.setItems(this.ObservableGames);
+        this.lvLobbyChat.setItems(this.ObservableLobbyChat);
+        this.lvGameChat.setItems(this.ObservableGameLobbyChat);
+
     }
 
-    private void fillPlayerList() throws SQLException, RemoteException {
+    public void refreshList() throws SQLException, RemoteException {
+        fillPlayerList();
+        fillGameList();
+        initViews();
+    }
+
+    private void fillPlayerList() throws RemoteException {
+        playerList.clear();
         if (loginIn.getOnlineUsers() != null) {
-            for (User user : loginIn.getOnlineUsers()) {
-                playerList.add(user.getName());
+            for (User onlineUser : loginIn.getOnlineUsers()) {
+                playerList.add(onlineUser.getName());
+            }
+        } else {
+            System.out.println("no users online");
+        }
+    }
+
+    private void fillGameList() throws RemoteException {
+        gameList.clear();
+
+        if (gameManager.getGames() != null) {
+            for (IGame g : gameManager.getGames()) {
+                gameList.add(g.getGameName());
             }
         } else {
             System.out.println("no users online");
@@ -149,13 +211,14 @@ public class LoginController implements Initializable {
     public void Login(Event evt) throws IOException, SQLException, NotBoundException {
         if (loginIn.Login(tfBeginUsername.getText(), tfBeginPassword.getText()) != null) {
             user = loginIn.Login(tfBeginUsername.getText(), tfBeginPassword.getText());
-            loginIn.addToOnline(user);
             LobbySession.user = user;
+            loginIn.addToOnline(LobbySession.user);
             stage = (Stage) btBeginLogIn.getScene().getWindow();
             root = FXMLLoader.load(getClass().getResource("Lobby.fxml"));
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
+
         } else {
             Alert alert = new Alert(AlertType.INFORMATION);
             alert.setTitle("Information");
@@ -174,6 +237,34 @@ public class LoginController implements Initializable {
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+    }
+
+    @FXML
+    public void joinGame() throws RemoteException, IOException {
+        for (IGame g : gameManager.getGames()) {
+            System.out.println("Sleectinmodel: " + lvLobbyGames.getSelectionModel());
+            System.out.println(g.getGameName());
+            if (g.getGameName().equals(lvLobbyGames.getSelectionModel().getSelectedItem())) {
+                gameManager.joinLobby(g.getGameID(), LobbySession.user.getUserID());
+
+                stage = (Stage) btLobbyCreateGame.getScene().getWindow();
+                root = FXMLLoader.load(getClass().getResource("GameLobby.fxml"));
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+                stage.show();
+
+                System.out.print(gameName);
+                initViews();
+
+            } else {
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Information");
+                alert.setHeaderText(null);
+                alert.setContentText("Game Not Found");
+
+                alert.showAndWait();
+            }
+        }
     }
 
     //Create a new game
@@ -214,17 +305,23 @@ public class LoginController implements Initializable {
             alert.setHeaderText("Please fill in game name");
             alert.showAndWait();
         } else {
-            fakegames.add(tfCreateGameName.getText());
-            fakegames.add("WTF");
-            initViews();
-            //stage.close();
-            AMazeIng amazeing = new AMazeIng();
-            //stage = (Stage) btBeginLogIn.getScene().getWindow();
-            Stage stageAMazeIng = new Stage();
-            amazeing.start(stageAMazeIng);
-            stageAMazeIng.show();
+            ///TODO
 
-//            stage.show();
+            LobbySession.game = gameManager.newLobby(LobbySession.user.getUserID());
+            LobbySession.game.setGameName(tfCreateGameName.getText());
+
+            LbGameName.setText(LobbySession.game.getGameName());
+
+            stage = (Stage) tfCreateGameName.getScene().getWindow();
+            root = FXMLLoader.load(getClass().getResource("GameLobby.fxml"));
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+
+            System.out.print(gameName);
+            initViews();
+
+            //            stage.show();
             //placeholder code//going back to the lobby // todo !!!!!!!!!!!!!!!!!!!!
             /*stage = (Stage) btCreateCreateGame.getScene().getWindow();
              root = FXMLLoader.load(getClass().getResource("Lobby.fxml"));
@@ -232,6 +329,15 @@ public class LoginController implements Initializable {
              stage.setScene(scene);
              stage.show();*/            //placeholder end
         }
+    }
+
+    @FXML
+    public void startGame() throws NotBoundException, RemoteException {
+        AMazeIng amazeing = new AMazeIng();
+        //stage = (Stage) btBeginLogIn.getScene().getWindow();
+        Stage stageAMazeIng = new Stage();
+        amazeing.start(stageAMazeIng);
+        stageAMazeIng.show();
     }
 
     @FXML
@@ -254,9 +360,31 @@ public class LoginController implements Initializable {
     }
 
     //Send a message to the chat. Adding it to the fakechat.
-    public void sendMessage(Event evt) {
-        fakechat.add(tfLobbyChat.getText());
-        initViews();
-        tfLobbyChat.clear();
+    @FXML
+    public void sendLobbyMessage(Event evt) {
+        if (!"".equals(tfLobbyChat.getText())) {
+            lobbyChat.add(tfLobbyChat.getText());
+            initViews();
+            tfLobbyChat.clear();
+        }
+    }
+
+    
+    @FXML
+    public void backToLoginScreen() throws IOException {
+        stage = (Stage) btCreateAccount.getScene().getWindow();
+        root = FXMLLoader.load(getClass().getResource("Login.fxml"));
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
+    public void sendGameLobbyMessage(Event evt) {
+        if (!"".equals(TaGameChat.getText())) {
+            gameLobbyChat.add(TaGameChat.getText());
+            initViews();
+            TaGameChat.clear();
+        }
     }
 }

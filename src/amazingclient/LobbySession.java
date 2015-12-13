@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package amazingclient;
+import amazingsharedproject.Interfaces.IGame;
 import amazingsharedproject.User;
 
 /**
@@ -12,6 +13,7 @@ import amazingsharedproject.User;
  */
 public final class LobbySession {
     public static User user;
+    public static IGame game;
     
     private LobbySession() {
     }
