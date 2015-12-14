@@ -59,12 +59,12 @@ public class AMazeIng extends Application {
 
     //PlayerController
     private Block[][] mazegrid;
-    
+
     private Player player1;
     private Player player2;
     private Player player3;
     private Player player4;
-    
+
     private Node nodePlayer1;
     private Node nodePlayer2;
     private Node nodePlayer3;
@@ -75,7 +75,7 @@ public class AMazeIng extends Application {
     private static final String bindName = "Test";
     private Registry registry;
     //todo PAS DIT AAN
-    private static final String ip = "192.168.9.1";
+    private static final String ip = "192.168.15.1";
 
     public AMazeIng() {
     }
@@ -132,9 +132,9 @@ public class AMazeIng extends Application {
                 }
             }
         }
-        
+
         game.getPlayer(LobbySession.user.getUserID());
-        
+
         try {
             switch (game.getGameState().getPlayers().size()) {
                 case 1:
@@ -146,7 +146,7 @@ public class AMazeIng extends Application {
                     nodePlayer1.setLayoutX(player1.getX());
                     nodePlayer1.setLayoutY(player1.getY());
                     break;
-                    
+
                 case 2:
                     player1 = game.getGameState().getPlayers().get(0);
                     player2 = game.getGameState().getPlayers().get(1);
@@ -157,7 +157,7 @@ public class AMazeIng extends Application {
                     nodePlayer1.setLayoutX(player1.getX());
                     nodePlayer1.setLayoutY(player1.getY());
                     break;
-                    
+
                 case 3:
                     player1 = game.getGameState().getPlayers().get(0);
                     player2 = game.getGameState().getPlayers().get(1);
@@ -169,7 +169,7 @@ public class AMazeIng extends Application {
                     nodes.add(nodePlayer2);
                     nodes.add(nodePlayer3);
                     break;
-                    
+
                 case 4:
                     player1 = game.getGameState().getPlayers().get(0);
                     player2 = game.getGameState().getPlayers().get(1);
@@ -185,9 +185,7 @@ public class AMazeIng extends Application {
                     nodes.add(nodePlayer4);
                     break;
             }
-            
-            
-            
+
         } catch (RemoteException ex) {
 
         }
@@ -286,55 +284,68 @@ public class AMazeIng extends Application {
     }
 
     private ArrayList<Node> abilNodes = new ArrayList<Node>();
+
     private class playerAnim extends AnimationTimer {
 
         GameState gs;
+
         @Override
         public void handle(long now) {
             try {
-                if(keys.size() > 0) {
+                if (keys.size() > 0) {
                     game.handleInput(game.getPlayer(LobbySession.user.getUserID()).getID(), keys);
                 }
-                
+
                 gs = game.getGameState();
-                for(Player p : gs.getPlayers()) {
-                    if(p.getID() == player1.getID())
+                for (Player p : gs.getPlayers()) {
+                    if (player1 != null && p.getID() == player1.getID()) {
                         player1 = p;
-                    /*
-                    if(p.getID() == player2.getID())
+                        nodePlayer1.relocate(player1.getX(), player1.getY());
+                        nodePlayer1.setRotate(getRot(player1.getDirection()));
+                    }
+
+                    if (player2 != null && p.getID() == player2.getID()) {
                         player2 = p;
-                    if(p.getID() == player3.getID())
+                        nodePlayer2.relocate(player2.getX(), player2.getY());
+                        nodePlayer2.setRotate(getRot(player2.getDirection()));
+                    }
+
+                    if (player3 != null && p.getID() == player3.getID()) {
                         player3 = p;
-                    if(p.getID() == player4.getID())
-                        player4 = p;*/
-                    
-                    nodePlayer1.relocate(player1.getX(), player1.getY());
-                    nodePlayer1.setRotate(getRot(player1.getDirection()));
+                        nodePlayer3.relocate(player3.getX(), player3.getY());
+                        nodePlayer3.setRotate(getRot(player3.getDirection()));
+                    }
+                    if (player4 != null && p.getID() == player4.getID()) {
+                        player4 = p;
+                        nodePlayer4.relocate(player4.getX(), player4.getY());
+                        nodePlayer4.setRotate(getRot(player4.getDirection()));
+                    }
                 }
-                
-                for(Node n : abilNodes) {
+
+                for (Node n : abilNodes) {
                     group.getChildren().remove(n);
                 }
                 abilNodes.clear();
-                
-                for(Used u : gs.getAbilities()) {
+
+                for (Used u : gs.getAbilities()) {
                     Node n = new ImageView(Ability.getImage(1));
                     n.relocate(u.getX(), u.getY());
                     n.setRotate(getRot(u.getDirection()));
                     abilNodes.add(n);
                 }
-                
-                for(Node n : abilNodes) {
+
+                for (Node n : abilNodes) {
                     group.getChildren().add(n);
                 }
             } catch (RemoteException ex) {
                 Logger.getLogger(AMazeIng.class.getName()).log(Level.SEVERE, null, ex);
-            }  
+            }
             System.out.println("X: " + gs.getPlayers().get(0).getX() + "Y: " + gs.getPlayers().get(0).getY());
-            
+
         }
+
         private double getRot(Direction d) {
-            switch(d) {
+            switch (d) {
                 case UP:
                     return 0;
                 case DOWN:

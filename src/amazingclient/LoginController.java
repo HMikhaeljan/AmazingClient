@@ -84,7 +84,7 @@ public class LoginController implements Initializable {
     private Registry registry;
     public IGameManager gameManager;
     //todo PAS DIT AAN
-    private static final String ip = "192.168.9.1";
+    private static final String ip = "192.168.15.1";
 
     //Login
     @FXML
