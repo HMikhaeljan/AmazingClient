@@ -52,6 +52,7 @@ import javafx.stage.Stage;
 public class LoginController implements Initializable {
 
     ILogin loginIn;
+
     AmazingClient st = new AmazingClient();
 
     private ArrayList lobbyChat = new ArrayList();
@@ -81,7 +82,7 @@ public class LoginController implements Initializable {
     private static final int port = 1099;
     private static final String bindName = "Test";
     private Registry registry;
-    private IGameManager gameManager;
+    public IGameManager gameManager;
     //todo PAS DIT AAN
     private static final String ip = "192.168.9.1";
 
@@ -218,7 +219,11 @@ public class LoginController implements Initializable {
         if (gameManager.getGames() != null) {
             for (IGame g : gameManager.getGames()) {
                 for (Player s : g.getPlayers()) {
-                    gamePlayers.add(s);
+                    for (User u : loginIn.getOnlineUsers()) {
+                        if (s.getUserID() == u.getUserID()) {
+                            gamePlayers.add(u.getName());
+                        }
+                    }
                 }
             }
         } else {
@@ -300,10 +305,10 @@ public class LoginController implements Initializable {
     @FXML
     public void joinGame() throws RemoteException, IOException {
         for (IGame g : gameManager.getGames()) {
-            System.out.println("Sleectinmodel: " + lvLobbyGames.getSelectionModel());
-            System.out.println(g.getGameName());
+
             if (g.getGameName().equals(lvLobbyGames.getSelectionModel().getSelectedItem())) {
-                gameManager.joinLobby(g.getGameID(), LobbySession.user.getUserID());
+                LobbySession.game = gameManager.joinLobby(g.getGameID(), LobbySession.user.getUserID());
+                LobbySession.game.getPlayer(LobbySession.user.getUserID());
 
                 stage = (Stage) btLobbyCreateGame.getScene().getWindow();
                 root = FXMLLoader.load(getClass().getResource("GameLobby.fxml"));
@@ -366,6 +371,7 @@ public class LoginController implements Initializable {
             ///TODO
 
             LobbySession.game = gameManager.newLobby(LobbySession.user.getUserID());
+            LobbySession.game.getPlayer(LobbySession.user.getUserID());
             LobbySession.game.setGameName(tfCreateGameName.getText());
 
             LbGameName.setText(LobbySession.game.getGameName());
@@ -415,6 +421,7 @@ public class LoginController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(tfNewUserUsername.getText() + " your account has been succesfully created");
         alert.showAndWait();
+
     }
 
     //Send a message to the chat. Adding it to the fakechat.

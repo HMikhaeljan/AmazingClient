@@ -33,6 +33,7 @@ public class AmazingClient extends Application {
         log = new LoginController();
         System.out.println("Lobbysession: " + LobbySession.user.getUserID());
         log.loginIn.removeFromOnline(LobbySession.user);
+        log.gameManager.removeLobby(LobbySession.game.getGameID());
     }
 
     /**
