@@ -70,7 +70,7 @@ public class LoginController implements Initializable {
     private Registry registry;
     private IGameManager gameManager;
     //todo PAS DIT AAN
-    private static final String ip = "192.168.1.19";
+    private static final String ip = "192.168.9.1";
 
     //Login
     @FXML
