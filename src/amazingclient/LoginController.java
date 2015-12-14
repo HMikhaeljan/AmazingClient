@@ -478,7 +478,7 @@ public class LoginController implements Initializable {
     }
 
     public void setRole() throws RemoteException {
-        LobbySession.game.getPlayer(LobbySession.user.getUserID()).setRoleID(roleID);
+        LobbySession.game.changeRole(LobbySession.user.getUserID(), roleID);
     }
 
     @FXML
@@ -489,19 +489,19 @@ public class LoginController implements Initializable {
 
     @FXML
     public void setRoleRogue() throws RemoteException {
-        roleID = 2;
+        roleID = 0;
         setRole();
     }
 
     @FXML
     public void setRoleWarrior() throws RemoteException {
-        roleID = 3;
+        roleID = 2;
         setRole();
     }
 
     @FXML
     public void setRoleHunter() throws RemoteException {
-        roleID = 0;
+        roleID = 3;
         setRole();
     }
 
