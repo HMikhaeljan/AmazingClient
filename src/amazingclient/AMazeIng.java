@@ -75,7 +75,7 @@ public class AMazeIng extends Application {
     private static final String bindName = "Test";
     private Registry registry;
     //todo PAS DIT AAN
-    private static final String ip = "192.168.15.1";
+    private static final String ip = "169.254.5.165";
 
     public AMazeIng() {
     }
@@ -154,6 +154,8 @@ public class AMazeIng extends Application {
                     nodePlayer2 = new ImageView(new PlayerRole(game.getGameState().getPlayers().get(1).getPlayerRoleID()).getImage(Direction.UP));
                     nodes.add(nodePlayer1);
                     nodes.add(nodePlayer2);
+                    game.setReady(player1.getID(), true);
+                    game.setReady(player2.getID(), true);
                     nodePlayer1.setLayoutX(player1.getX());
                     nodePlayer1.setLayoutY(player1.getY());
                     break;
