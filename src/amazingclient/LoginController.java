@@ -8,6 +8,7 @@ package amazingclient;
 import amazingsharedproject.Interfaces.IGame;
 import amazingsharedproject.Interfaces.IGameManager;
 import amazingsharedproject.Interfaces.ILogin;
+import amazingsharedproject.Player;
 import amazingsharedproject.User;
 import java.io.IOException;
 import java.net.URL;
@@ -19,8 +20,13 @@ import java.rmi.registry.Registry;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -50,15 +56,22 @@ public class LoginController implements Initializable {
 
     private ArrayList lobbyChat = new ArrayList();
     private ArrayList gameList = new ArrayList();
-    private ArrayList playerList = new ArrayList();
+    private ArrayList userList = new ArrayList();
     private ArrayList gameLobbyChat = new ArrayList();
+    private ArrayList gamePlayers = new ArrayList();
 
     private ObservableList ObservableLobbyChat;
     private ObservableList ObservableGames;
     private ObservableList<User> ObservableUsers;
     private ObservableList ObservableGameLobbyChat;
+    private ObservableList ObservableGameLobbyPlayers;
 
-    String gameName = "";
+    String gameName = "fsggs";
+    StringProperty gameNameProperty;
+
+    String userName = "ahffd";
+    StringProperty userNameProperty;
+
     String chatinfo = "Welkom bij Amazing chat";
     Stage stage;
     Parent root;
@@ -70,7 +83,7 @@ public class LoginController implements Initializable {
     private Registry registry;
     private IGameManager gameManager;
     //todo PAS DIT AAN
-    private static final String ip = "192.168.1.19";
+    private static final String ip = "192.168.15.1";
 
     //Login
     @FXML
@@ -82,6 +95,8 @@ public class LoginController implements Initializable {
 
     //Lobby    
     @FXML
+    private Label LbLobbyUserName = new Label("Usernameeee");
+
     private TextArea tfLobbyChat;
     @FXML
     private ListView lvLobbyUsers = new ListView();
@@ -112,7 +127,7 @@ public class LoginController implements Initializable {
     @FXML
     private Button BtGameStartGame;
     @FXML
-    private Label LbGameName = new Label();
+    private Label LbGameName = new Label("Pannekoek");
 
     //Create User
     @FXML
@@ -151,41 +166,59 @@ public class LoginController implements Initializable {
         } catch (NotBoundException ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        try {
-            refreshList();
-        } catch (SQLException ex) {
-            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+        Timer timer = new Timer("Timer");
+
+        long delay = 0;
+        long period = 5000;
+        timer.scheduleAtFixedRate(new refreshTask(), delay, period);
+
+        gameNameProperty = new SimpleStringProperty(gameName);
+        userNameProperty = new SimpleStringProperty(userName);
 
     }
 
     @FXML
     private void initViews() {
-        ObservableUsers = FXCollections.observableArrayList(this.playerList);
+        ObservableUsers = FXCollections.observableArrayList(this.userList);
         ObservableGames = FXCollections.observableArrayList(this.gameList);
         ObservableLobbyChat = FXCollections.observableArrayList(this.lobbyChat);
         ObservableGameLobbyChat = FXCollections.observableArrayList(this.gameLobbyChat);
+        ObservableGameLobbyPlayers = ObservableGameLobbyChat = FXCollections.observableArrayList(this.gamePlayers);
 
         this.lvLobbyUsers.setItems(this.ObservableUsers);
         this.lvLobbyGames.setItems(this.ObservableGames);
         this.lvLobbyChat.setItems(this.ObservableLobbyChat);
         this.lvGameChat.setItems(this.ObservableGameLobbyChat);
-
+        this.lvGamePlayer.setItems(this.ObservableGameLobbyPlayers);
     }
 
     public void refreshList() throws SQLException, RemoteException {
-        fillPlayerList();
+        fillUserList();
         fillGameList();
+        fillPlayerList();
         initViews();
+
+    }
+
+    private void fillUserList() throws RemoteException {
+        userList.clear();
+        if (loginIn.getOnlineUsers() != null) {
+            for (User onlineUser : loginIn.getOnlineUsers()) {
+                userList.add(onlineUser.getName());
+            }
+        } else {
+            System.out.println("no users online");
+        }
     }
 
     private void fillPlayerList() throws RemoteException {
-        playerList.clear();
-        if (loginIn.getOnlineUsers() != null) {
-            for (User onlineUser : loginIn.getOnlineUsers()) {
-                playerList.add(onlineUser.getName());
+        gamePlayers.clear();
+        if (gameManager.getGames() != null) {
+            for (IGame g : gameManager.getGames()) {
+                for (Player s : g.getPlayers()) {
+                    gamePlayers.add(s);
+                }
             }
         } else {
             System.out.println("no users online");
@@ -204,6 +237,28 @@ public class LoginController implements Initializable {
         }
     }
 
+    private class refreshTask extends TimerTask {
+
+        @Override
+        public void run() {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+
+                    try {
+                        refreshList();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (RemoteException ex) {
+                        Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+
+            });
+        }
+
+    }
+
     /*
      /Check of de naam in de database gelijk is aan de textveld tfBeginUsername
      */
@@ -212,6 +267,8 @@ public class LoginController implements Initializable {
         if (loginIn.Login(tfBeginUsername.getText(), tfBeginPassword.getText()) != null) {
             user = loginIn.Login(tfBeginUsername.getText(), tfBeginPassword.getText());
             LobbySession.user = user;
+            userName = user.getName();
+            LbLobbyUserName.textProperty().bind(userNameProperty);
             loginIn.addToOnline(LobbySession.user);
             stage = (Stage) btBeginLogIn.getScene().getWindow();
             root = FXMLLoader.load(getClass().getResource("Lobby.fxml"));
@@ -369,7 +426,6 @@ public class LoginController implements Initializable {
         }
     }
 
-    
     @FXML
     public void backToLoginScreen() throws IOException {
         stage = (Stage) btCreateAccount.getScene().getWindow();

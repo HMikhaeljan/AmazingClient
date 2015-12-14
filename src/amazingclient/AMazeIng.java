@@ -75,7 +75,7 @@ public class AMazeIng extends Application {
     private static final String bindName = "Test";
     private Registry registry;
     //todo PAS DIT AAN
-    private static final String ip = "192.168.1.19";
+    private static final String ip = "192.168.15.1";
 
     public AMazeIng() {
     }

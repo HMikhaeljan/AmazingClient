@@ -11,11 +11,13 @@
       <Button fx:id="BtLobbyRefresh" layoutX="468.0" layoutY="290.0" mnemonicParsing="false" onAction="#refreshList" prefHeight="25.0" prefWidth="150.0" text="Refresh" />
       <Button fx:id="btLobbyJoinGame" layoutX="468.0" layoutY="332.0" mnemonicParsing="false" onAction="#joinGame" prefHeight="25.0" prefWidth="150.0" text="Join Game" />
       <Button fx:id="btLobbyCreateGame" layoutX="468.0" layoutY="369.0" mnemonicParsing="false" onAction="#CreateLobby" prefHeight="25.0" prefWidth="150.0" text="Create Game" />
-      <ListView fx:id="lvLobbyUsers" layoutX="468.0" layoutY="22.0" prefHeight="249.0" prefWidth="150.0" />
-      <ListView fx:id="lvLobbyGames" layoutX="23.0" layoutY="22.0" prefHeight="293.0" prefWidth="150.0" />
-      <ListView fx:id="lvLobbyChat" layoutX="196.0" layoutY="22.0" prefHeight="293.0" prefWidth="250.0" />
-      <Label layoutX="80.0" layoutY="6.0" text="Games" />
-      <Label layoutX="309.0" layoutY="6.0" text="Chat" />
-      <Label layoutX="524.0" layoutY="6.0" text="Players" />
+      <ListView fx:id="lvLobbyUsers" layoutX="468.0" layoutY="54.0" prefHeight="217.0" prefWidth="150.0" />
+      <ListView fx:id="lvLobbyGames" layoutX="23.0" layoutY="54.0" prefHeight="261.0" prefWidth="150.0" />
+      <ListView fx:id="lvLobbyChat" layoutX="196.0" layoutY="54.0" prefHeight="261.0" prefWidth="250.0" />
+      <Label layoutX="23.0" layoutY="37.0" text="Games" />
+      <Label layoutX="196.0" layoutY="37.0" text="Chat" />
+      <Label layoutX="468.0" layoutY="37.0" text="Players" />
+      <Label layoutX="21.0" layoutY="6.0" text="User:" />
+      <Label fx:id="LbLobbyUserName" layoutX="59.0" layoutY="6.0" text="test" />
    </children>
 </Pane>
