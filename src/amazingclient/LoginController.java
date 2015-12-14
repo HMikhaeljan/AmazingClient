@@ -12,7 +12,6 @@ import amazingsharedproject.Player;
 import amazingsharedproject.User;
 import java.io.IOException;
 import java.net.URL;
-import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -42,6 +41,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -69,7 +69,7 @@ public class LoginController implements Initializable {
 
     String gameName = "fsggs";
     StringProperty gameNameProperty;
-
+    int roleID = 1;
     String userName = "ahffd";
     StringProperty userNameProperty;
 
@@ -77,6 +77,8 @@ public class LoginController implements Initializable {
     Stage stage;
     Parent root;
     User user;
+
+    Timer timer2 = new Timer("Timer");
 
     //RMI:
     private static final int port = 1099;
@@ -115,6 +117,14 @@ public class LoginController implements Initializable {
     private TextField tfCreateGameName;
 
     //GameLobby
+    @FXML
+    private ImageView imgageViewMage = new ImageView();
+    @FXML
+    private ImageView imgageViewRogue = new ImageView();
+    @FXML
+    private ImageView imgageViewWarrior = new ImageView();
+    @FXML
+    private ImageView imgageViewHunter = new ImageView();
     @FXML
     private ListView lvGamePlayer = new ListView();
     @FXML
@@ -169,7 +179,6 @@ public class LoginController implements Initializable {
         }
 
         Timer timer = new Timer("Timer");
-
         long delay = 0;
         long period = 5000;
         timer.scheduleAtFixedRate(new refreshTask(), delay, period);
@@ -213,7 +222,6 @@ public class LoginController implements Initializable {
         }
     }
 
-    
     private void fillPlayerList() throws RemoteException {
         gamePlayers.clear();
         if (gameManager.getGames() != null) {
@@ -256,6 +264,31 @@ public class LoginController implements Initializable {
                     } catch (SQLException ex) {
                         Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (RemoteException ex) {
+                        Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+
+            });
+        }
+
+    }
+
+    private class launchGame extends TimerTask {
+
+        @Override
+        public void run() {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+
+                    try {
+                        if (LobbySession.game.allPlayersReady()) {
+                            startGame();
+                            timer2.cancel();
+                        }
+                    } catch (RemoteException ex) {
+                        Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (NotBoundException ex) {
                         Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -309,7 +342,7 @@ public class LoginController implements Initializable {
             if (g.getGameName().equals(lvLobbyGames.getSelectionModel().getSelectedItem())) {
                 LobbySession.game = gameManager.joinLobby(g.getGameID(), LobbySession.user.getUserID());
                 LobbySession.game.getPlayer(LobbySession.user.getUserID());
-
+                timer2.scheduleAtFixedRate(new launchGame(), 0, 1000);
                 stage = (Stage) btLobbyCreateGame.getScene().getWindow();
                 root = FXMLLoader.load(getClass().getResource("GameLobby.fxml"));
                 Scene scene = new Scene(root);
@@ -416,6 +449,7 @@ public class LoginController implements Initializable {
     @FXML
     public void newUser(Event evt) throws SQLException, RemoteException {
         loginIn.registerUser(tfNewUserUsername.getText(), tfNewUserPassword.getText());
+
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("Information");
         alert.setHeaderText(null);
@@ -443,6 +477,34 @@ public class LoginController implements Initializable {
         stage.show();
     }
 
+    public void setRole() throws RemoteException {
+        LobbySession.game.getPlayer(LobbySession.user.getUserID()).setRoleID(roleID);
+    }
+
+    @FXML
+    public void setRoleMage() throws RemoteException {
+        roleID = 1;
+        setRole();
+    }
+
+    @FXML
+    public void setRoleRogue() throws RemoteException {
+        roleID = 2;
+        setRole();
+    }
+
+    @FXML
+    public void setRoleWarrior() throws RemoteException {
+        roleID = 3;
+        setRole();
+    }
+
+    @FXML
+    public void setRoleHunter() throws RemoteException {
+        roleID = 0;
+        setRole();
+    }
+
     @FXML
     public void sendGameLobbyMessage(Event evt) {
         if (!"".equals(TaGameChat.getText())) {
@@ -450,5 +512,12 @@ public class LoginController implements Initializable {
             initViews();
             TaGameChat.clear();
         }
+    }
+
+    @FXML
+    public void setGameReady() throws RemoteException {
+        LobbySession.game.setReady(LobbySession.game.getPlayer(LobbySession.user.getUserID()).getID(), true);
+        System.out.println("User: " + LobbySession.user.getUserID() + "Pressed Ready On Game: " + LobbySession.game);
+        BtGameReady.setDisable(true);
     }
 }

@@ -10,11 +10,9 @@ import amazingsharedproject.Interfaces.IGame;
 import amazingsharedproject.Interfaces.IGameManager;
 import amazingsharedproject.Player;
 import amazingsharedproject.Sprite;
-import amazingsharedproject.User;
 import amazingsharedproject.*;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
@@ -139,9 +137,10 @@ public class AMazeIng extends Application {
             switch (game.getGameState().getPlayers().size()) {
                 case 1:
                     player1 = game.getGameState().getPlayers().get(0);
+                    System.out.println("WTF GEEFT DIT TERUG: " + game.getGameState().getPlayers().get(0).getPlayerRoleID());
                     nodePlayer1 = new ImageView(new PlayerRole(game.getGameState().getPlayers().get(0).getPlayerRoleID()).getImage(Direction.UP));
                     nodes.add(nodePlayer1);
-                    game.setReady(player1.getID(), true);
+                    //game.setReady(player1.getID(), true);
                     player1 = game.getGameState().getPlayers().get(0);
                     nodePlayer1.setLayoutX(player1.getX());
                     nodePlayer1.setLayoutY(player1.getY());
@@ -150,12 +149,13 @@ public class AMazeIng extends Application {
                 case 2:
                     player1 = game.getGameState().getPlayers().get(0);
                     player2 = game.getGameState().getPlayers().get(1);
+                    System.out.println("WTF GEEFT DIT TERUG: " + game.getGameState().getPlayers().get(0).getPlayerRoleID());
                     nodePlayer1 = new ImageView(new PlayerRole(game.getGameState().getPlayers().get(0).getPlayerRoleID()).getImage(Direction.UP));
                     nodePlayer2 = new ImageView(new PlayerRole(game.getGameState().getPlayers().get(1).getPlayerRoleID()).getImage(Direction.UP));
                     nodes.add(nodePlayer1);
                     nodes.add(nodePlayer2);
-                    game.setReady(player1.getID(), true);
-                    game.setReady(player2.getID(), true);
+                    //game.setReady(player1.getID(), true);
+                    //game.setReady(player2.getID(), true);
                     nodePlayer1.setLayoutX(player1.getX());
                     nodePlayer1.setLayoutY(player1.getY());
                     break;

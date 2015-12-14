@@ -15,11 +15,31 @@
                      <children>
                         <TextArea fx:id="TaGameChat" layoutX="10.0" layoutY="440.0" prefHeight="36.0" prefWidth="360.0" />
                         <Button fx:id="BtGameSendChat" layoutX="377.0" layoutY="440.0" mnemonicParsing="false" onAction="#sendGameLobbyMessage" prefHeight="37.0" prefWidth="84.0" text="Send" />
-                        <Button fx:id="BtGameReady" layoutX="412.0" layoutY="271.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="181.0" text="Ready" />
+                        <Button fx:id="BtGameReady" layoutX="412.0" layoutY="271.0" mnemonicParsing="false" onAction="#setGameReady" prefHeight="37.0" prefWidth="181.0" text="Ready" />
                         <ListView fx:id="lvGamePlayer" layoutX="411.0" layoutY="14.0" prefHeight="239.0" prefWidth="182.0" />
                         <ListView fx:id="lvGameChat" layoutX="10.0" layoutY="319.0" prefHeight="101.0" prefWidth="583.0" />
                         <Label fx:id="LbGameName" layoutX="14.0" layoutY="14.0" />
                         <Button fx:id="BtGameStartGame" layoutX="479.0" layoutY="440.0" mnemonicParsing="false" onAction="#startGame" prefHeight="37.0" prefWidth="112.0" text="Start game" />
+                        <ImageView fx:id="imageViewMage" fitHeight="150.0" fitWidth="200.0" layoutX="20.0" layoutY="14.0" onMouseClicked="#setRoleMage" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../Resources/Mage-DOWN.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="imageViewRogue" fitHeight="150.0" fitWidth="200.0" layoutX="198.0" layoutY="14.0" onMouseClicked="#setRoleRogue" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../Resources/RogueDOWN.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="imageViewWarrior" fitHeight="150.0" fitWidth="200.0" layoutX="20.0" layoutY="164.0" onMouseClicked="#setRoleWarrior" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../Resources/Warrior-DOWN.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="imageViewHunter" fitHeight="150.0" fitWidth="200.0" layoutX="198.0" layoutY="164.0" onMouseClicked="#setRoleHunter" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../Resources/Hunter-DOWN.png" />
+                           </image>
+                        </ImageView>
                      </children>
                   </AnchorPane>
             </content>
