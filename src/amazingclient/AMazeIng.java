@@ -330,7 +330,7 @@ public class AMazeIng extends Application {
                 abilNodes.clear();
 
                 for (Used u : gs.getAbilities()) {
-                    Node n = new ImageView(Ability.getImage(1));
+                    Node n = new ImageView(Ability.getImage(0+(4*LobbySession.game.getPlayer(LobbySession.user.getUserID()).getPlayerRoleID())));
                     n.relocate(u.getX(), u.getY());
                     n.setRotate(getRot(u.getDirection()));
                     abilNodes.add(n);
