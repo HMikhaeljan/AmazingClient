@@ -29,6 +29,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
@@ -40,9 +41,13 @@ public class AMazeIng extends Application {
     static int spritesize = 16;
 
     public Node sppp;
+    
+    public List<Text> msgs;
 
     public Group group;
 
+    private ArrayList<Image> images;
+    
     public ArrayList<Node> nodes;
 
     private IGameManager gamemanager;
@@ -58,22 +63,17 @@ public class AMazeIng extends Application {
     //PlayerController
     private Block[][] mazegrid;
 
-    private Player player1;
-    private Player player2;
-    private Player player3;
-    private Player player4;
-
-    private Node nodePlayer1;
-    private Node nodePlayer2;
-    private Node nodePlayer3;
-    private Node nodePlayer4;
+    
+    //Players:
+    private List<Player> players;
+    private List<Node> playerNodes;
 
     //RMI:
     private static final int port = 1099;
     private static final String bindName = "Test";
     private Registry registry;
     //todo PAS DIT AAN
-    private static final String ip = "169.254.5.165";
+    private static final String ip = "localhost";
 
     public AMazeIng() {
     }
@@ -87,111 +87,33 @@ public class AMazeIng extends Application {
 
         mazegrid = game.getGrid();
 
+        msgs = new ArrayList<>();
         //TODO FIX THIS JEROEN!!!
         //mazegrid = game.getGrid();
         Image imgWall = Sprite.LoadSprite("Resources/WallSprite.jpg", 16, 16);
         Node nodWall = new ImageView(imgWall);
         Group groupWall = new Group(nodWall);
         //Create list of all the block images
-        ArrayList<Image> images = new ArrayList<Image>();
+        images = new ArrayList<Image>();
         nodes = new ArrayList<Node>();
-        System.out.println("Mazegrid: " + mazegrid.length);
-        for (int y = 0; y < mazegrid.length; y++) {
-            for (int x = 0; x < mazegrid.length; x++) {
-                switch (mazegrid[y][x]) {
-                    case SOLID:
-                        Image sol = Sprite.LoadSprite("Resources/WallSprite.jpg", 16, 16);
-                        images.add(sol);
-                        Node wpos = new ImageView(sol);
-                        wpos.relocate(x * spritesize, y * spritesize);
-                        nodes.add(wpos);
-                        break;
-                    case OPEN:
-                        Image ope = Sprite.LoadSprite("Resources/FloorSprite.jpg", 16, 16);
-                        images.add(ope);
-                        Node opos = new ImageView(ope);
-                        opos.relocate(x * spritesize, y * spritesize);
-                        nodes.add(opos);
-                        break;
-                    case SPAWNPOINT:
-                        Image spp = Sprite.LoadSprite("Resources/SpawnPoint.jpg", 16, 16);
-                        images.add(spp);
-                        Node sppp = new ImageView(spp);
-                        sppp.relocate(x * spritesize, y * spritesize);
-                        nodes.add(sppp);
-                        break;
-                    case EDGE:
-                        Image edg = Sprite.LoadSprite("Resources/MapEdge.jpg", 16, 16);
-                        images.add(edg);
-                        Node edgp = new ImageView(edg);
-                        edgp.relocate(x * spritesize, y * spritesize);
-                        nodes.add(edgp);
-                        break;
-                }
-            }
+        drawMaze();
+
+        //game.getPlayer(LobbySession.user.getUserID());
+
+        players = new ArrayList<>();
+        playerNodes = new ArrayList<>();
+
+        Image pimg = Sprite.LoadSprite("Resources/Mage-UP.png", 16, 16);
+        GameState gs = game.getGameState();
+        for(Player p : gs.getPlayers()) {
+            Node playerNode = new ImageView(pimg);
+            playerNodes.add(playerNode);
+            playerNode.setLayoutX((p.getX()));
+            playerNode.setLayoutY((p.getY()));
+            playerNode.toFront();
+            nodes.add(playerNode);
         }
-
-        game.getPlayer(LobbySession.user.getUserID());
-
-        try {
-            switch (game.getGameState().getPlayers().size()) {
-                case 1:
-                    player1 = game.getGameState().getPlayers().get(0);
-                    System.out.println("WTF GEEFT DIT TERUG: " + game.getGameState().getPlayers().get(0).getPlayerRoleID());
-                    nodePlayer1 = new ImageView(new PlayerRole(game.getGameState().getPlayers().get(0).getPlayerRoleID()).getImage(Direction.UP));
-                    nodes.add(nodePlayer1);
-                    //game.setReady(player1.getID(), true);
-                    player1 = game.getGameState().getPlayers().get(0);
-                    nodePlayer1.setLayoutX(player1.getX());
-                    nodePlayer1.setLayoutY(player1.getY());
-                    break;
-
-                case 2:
-                    player1 = game.getGameState().getPlayers().get(0);
-                    player2 = game.getGameState().getPlayers().get(1);
-                    System.out.println("WTF GEEFT DIT TERUG: " + game.getGameState().getPlayers().get(0).getPlayerRoleID());
-                    nodePlayer1 = new ImageView(new PlayerRole(game.getGameState().getPlayers().get(0).getPlayerRoleID()).getImage(Direction.UP));
-                    nodePlayer2 = new ImageView(new PlayerRole(game.getGameState().getPlayers().get(1).getPlayerRoleID()).getImage(Direction.UP));
-                    nodes.add(nodePlayer1);
-                    nodes.add(nodePlayer2);
-                    //game.setReady(player1.getID(), true);
-                    //game.setReady(player2.getID(), true);
-                    nodePlayer1.setLayoutX(player1.getX());
-                    nodePlayer1.setLayoutY(player1.getY());
-                    break;
-
-                case 3:
-                    player1 = game.getGameState().getPlayers().get(0);
-                    player2 = game.getGameState().getPlayers().get(1);
-                    player3 = game.getGameState().getPlayers().get(2);
-                    nodePlayer1 = new ImageView(new PlayerRole(game.getGameState().getPlayers().get(0).getPlayerRoleID()).getImage(Direction.UP));
-                    nodePlayer2 = new ImageView(new PlayerRole(game.getGameState().getPlayers().get(1).getPlayerRoleID()).getImage(Direction.UP));
-                    nodePlayer3 = new ImageView(new PlayerRole(game.getGameState().getPlayers().get(2).getPlayerRoleID()).getImage(Direction.UP));
-                    nodes.add(nodePlayer1);
-                    nodes.add(nodePlayer2);
-                    nodes.add(nodePlayer3);
-                    break;
-
-                case 4:
-                    player1 = game.getGameState().getPlayers().get(0);
-                    player2 = game.getGameState().getPlayers().get(1);
-                    player3 = game.getGameState().getPlayers().get(2);
-                    player4 = game.getGameState().getPlayers().get(3);
-                    nodePlayer1 = new ImageView(new PlayerRole(game.getGameState().getPlayers().get(0).getPlayerRoleID()).getImage(Direction.UP));
-                    nodePlayer2 = new ImageView(new PlayerRole(game.getGameState().getPlayers().get(1).getPlayerRoleID()).getImage(Direction.UP));
-                    nodePlayer3 = new ImageView(new PlayerRole(game.getGameState().getPlayers().get(2).getPlayerRoleID()).getImage(Direction.UP));
-                    nodePlayer4 = new ImageView(new PlayerRole(game.getGameState().getPlayers().get(3).getPlayerRoleID()).getImage(Direction.UP));
-                    nodes.add(nodePlayer1);
-                    nodes.add(nodePlayer2);
-                    nodes.add(nodePlayer3);
-                    nodes.add(nodePlayer4);
-                    break;
-            }
-
-        } catch (RemoteException ex) {
-
-        }
-
+ 
         group = new Group(nodes);
         scene = new Scene(group, mazegrid.length * spritesize, mazegrid.length * spritesize, Color.DARKSALMON);
         primaryStage.setTitle("Pathfinding");
@@ -284,6 +206,44 @@ public class AMazeIng extends Application {
         controlsTimer = new playerAnim();
         controlsTimer.start();
     }
+    
+    private void drawMaze() {
+        System.out.println("Mazegrid: " + mazegrid.length);
+        for (int y = 0; y < mazegrid.length; y++) {
+            for (int x = 0; x < mazegrid.length; x++) {
+                switch (mazegrid[y][x]) {
+                    case SOLID:
+                        Image sol = Sprite.LoadSprite("Resources/WallSprite.jpg", 16, 16);
+                        images.add(sol);
+                        Node wpos = new ImageView(sol);
+                        wpos.relocate(x * spritesize, y * spritesize);
+                        nodes.add(wpos);
+                        break;
+                    case OPEN:
+                        Image ope = Sprite.LoadSprite("Resources/FloorSprite.jpg", 16, 16);
+                        images.add(ope);
+                        Node opos = new ImageView(ope);
+                        opos.relocate(x * spritesize, y * spritesize);
+                        nodes.add(opos);
+                        break;
+                    case SPAWNPOINT:
+                        Image spp = Sprite.LoadSprite("Resources/SpawnPoint.jpg", 16, 16);
+                        images.add(spp);
+                        Node sppp = new ImageView(spp);
+                        sppp.relocate(x * spritesize, y * spritesize);
+                        nodes.add(sppp);
+                        break;
+                    case EDGE:
+                        Image edg = Sprite.LoadSprite("Resources/MapEdge.jpg", 16, 16);
+                        images.add(edg);
+                        Node edgp = new ImageView(edg);
+                        edgp.relocate(x * spritesize, y * spritesize);
+                        nodes.add(edgp);
+                        break;
+                }
+            }
+        }
+    }
 
     private ArrayList<Node> abilNodes = new ArrayList<Node>();
 
@@ -299,28 +259,15 @@ public class AMazeIng extends Application {
                 }
 
                 gs = game.getGameState();
-                for (Player p : gs.getPlayers()) {
-                    if (player1 != null && p.getID() == player1.getID()) {
-                        player1 = p;
-                        nodePlayer1.relocate(player1.getX(), player1.getY());
-                        nodePlayer1.setRotate(getRot(player1.getDirection()));
-                    }
-
-                    if (player2 != null && p.getID() == player2.getID()) {
-                        player2 = p;
-                        nodePlayer2.relocate(player2.getX(), player2.getY());
-                        nodePlayer2.setRotate(getRot(player2.getDirection()));
-                    }
-
-                    if (player3 != null && p.getID() == player3.getID()) {
-                        player3 = p;
-                        nodePlayer3.relocate(player3.getX(), player3.getY());
-                        nodePlayer3.setRotate(getRot(player3.getDirection()));
-                    }
-                    if (player4 != null && p.getID() == player4.getID()) {
-                        player4 = p;
-                        nodePlayer4.relocate(player4.getX(), player4.getY());
-                        nodePlayer4.setRotate(getRot(player4.getDirection()));
+                
+                int idx= 0;
+                for(Node n: playerNodes) {
+                    if(gs.getPlayers().get(idx) != null) {
+                        Player p = gs.getPlayers().get(idx);
+                        n.relocate(p.getX(), p.getY());
+                        n.setRotate(getRot(p.getDirection()));
+                        //System.out.println("Node edited");
+                        idx++;
                     }
                 }
 
@@ -339,10 +286,30 @@ public class AMazeIng extends Application {
                 for (Node n : abilNodes) {
                     group.getChildren().add(n);
                 }
+                
+                
+                int tpos= game.getGrid().length * spritesize-100;
+                //TEXT:
+                for(Text t: msgs) {
+                    group.getChildren().remove(t);
+                }
+                msgs.clear();
+                for(String s : gs.getMessages()) {
+                    Text t = new Text(s);
+                    t.setFill(Color.GREENYELLOW);
+                    t.setX(20);
+                    t.setY(tpos);
+                    tpos-=15;
+                    msgs.add(t);
+                }
+                
+                for(Text t : msgs) {
+                    group.getChildren().add(t);
+                }
             } catch (RemoteException ex) {
                 Logger.getLogger(AMazeIng.class.getName()).log(Level.SEVERE, null, ex);
             }
-            System.out.println("X: " + gs.getPlayers().get(0).getX() + "Y: " + gs.getPlayers().get(0).getY());
+            //System.out.println("X: " + gs.getPlayers().get(0).getX() + "Y: " + gs.getPlayers().get(0).getY());
 
         }
 
