@@ -247,7 +247,7 @@ public class LoginController implements Initializable {
                                 for (User u : loginIn.getOnlineUsers()) {
                                     if (s.getUserID() == u.getUserID()) {
                                         tempgamePlayers.add(u.getName());
-                                        System.out.println("Players in playerlist::" + tempgamePlayers.toString());
+                                        //System.out.println("Players in playerlist::" + tempgamePlayers.toString());
                                     }
                                 }
                             }
@@ -322,8 +322,9 @@ public class LoginController implements Initializable {
 
                     try {
                         if (LobbySession.game.allPlayersReady()) {
-                            startGame();
                             timer2.cancel();
+                            startGame();
+                            System.out.println("Starting game");
                         }
                     } catch (RemoteException | NotBoundException ex) {
                         Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
@@ -356,6 +357,8 @@ public class LoginController implements Initializable {
                     userName = user.getName();
                     LbLobbyUserName.textProperty().bind(userNameProperty);
                     loginIn.addToOnline(LobbySession.user);
+                    
+                    
                     stage = (Stage) btBeginLogIn.getScene().getWindow();
                     root = FXMLLoader.load(getClass().getResource("Lobby.fxml"));
                     Scene scene = new Scene(root);
@@ -511,6 +514,11 @@ public class LoginController implements Initializable {
         //stage = (Stage) btBeginLogIn.getScene().getWindow();
         Stage stageAMazeIng = new Stage();
         amazeing.start(stageAMazeIng);
+        
+        Stage stageStats = new Stage();
+        StatsBar statsBar = new StatsBar(LobbySession.user, LobbySession.game);
+        statsBar.start(stageStats);
+        
         stageAMazeIng.show();
     }
 
