@@ -1,0 +1,73 @@
+	
+.root{
+    -fx-background-image: url("Maze.png");
+    -fx-background-repeat: stretch;   
+    -fx-background-size: 900 506;
+    -fx-background-position: center center;
+    -fx-effect: dropshadow(three-pass-box, black, 30, 0.5, 0, 0); 
+}
+
+#tpGameLobby{
+-fx-color: limegreen;
+-fx-background-color: limegreen;
+
+}
+
+#lvGamePlayer.table-row-cell:empty {
+    -fx-background-color: khaki;
+    -fx-border-color: grey
+}
+ 
+#lvGamePlayer.table-row-cell:hover{
+    -fx-background-color: blanchedalmond;
+}
+ 
+#lvGamePlayer.table-row-cell:selected{
+    -fx-background-color: chocolate;
+}
+ 
+
+#lbGameMage{
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #32cd32;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1 );
+}
+
+#lbGameRogue{
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #32cd32;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1 );
+}
+
+#lbGameWarrior{
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1 );
+}
+
+#lbGameHunter{
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1 );
+}
+
+
+
+#BtGameSendChat{
+	-fx-color: limegreen;
+	-fx-background-color: limegreen;
+}
+
+#BtGameReady{
+	-fx-color: limegreen;
+	-fx-background-color: limegreen;
+}
+
+#btGameLobbyExit{
+	-fx-color: limegreen;
+	-fx-background-color: limegreen;
+}

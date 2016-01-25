@@ -1,0 +1,32 @@
+
+#apLogin{
+    -fx-background-image: url("Maze.png");
+    -fx-background-repeat: stretch;   
+    -fx-background-size: 900 506;
+    -fx-background-position: center center;
+    -fx-effect: dropshadow(three-pass-box, black, 30, 0.5, 0, 0); 
+}
+
+#lbLoginUsername {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #32cd32;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1 );
+}
+
+#lbLoginPassword {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #32cd32;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1 );
+} 
+
+#btBeginLogIn {
+	-fx-color: limegreen;
+	-fx-background-color: limegreen;
+}
+
+#btBeginCreate{
+	-fx-color: limegreen;
+	-fx-background-color: limegreen;
+}

@@ -5,41 +5,45 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="509.0" prefWidth="607.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="amazingclient.LoginController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="476.0" prefWidth="848.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="amazingclient.LoginController">
    <children>
-      <TabPane layoutX="-1.0" layoutY="-7.0" prefHeight="540.0" prefWidth="609.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane layoutX="-1.0" layoutY="-7.0" prefHeight="476.0" prefWidth="848.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
-          <Tab text="Game">
+          <Tab fx:id="tpGameLobby" text="Game">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+              <AnchorPane fx:id="apGameLobby" prefHeight="380.0" prefWidth="848.0">
                      <children>
-                        <TextArea fx:id="TaGameChat" layoutX="10.0" layoutY="440.0" prefHeight="36.0" prefWidth="360.0" />
-                        <Button fx:id="BtGameSendChat" layoutX="377.0" layoutY="440.0" mnemonicParsing="false" onAction="#sendGameLobbyMessage" prefHeight="37.0" prefWidth="84.0" text="Send" />
-                        <Button fx:id="BtGameReady" layoutX="412.0" layoutY="271.0" mnemonicParsing="false" onAction="#setGameReady" prefHeight="37.0" prefWidth="181.0" text="Ready" />
-                        <ListView fx:id="lvGamePlayer" layoutX="411.0" layoutY="14.0" prefHeight="239.0" prefWidth="182.0" />
-                        <ListView fx:id="lvGameChat" layoutX="10.0" layoutY="319.0" prefHeight="101.0" prefWidth="583.0" />
-                        <Label fx:id="LbGameName" layoutX="14.0" layoutY="14.0" />
-                        <Button fx:id="BtGameStartGame" layoutX="479.0" layoutY="440.0" mnemonicParsing="false" onAction="#startGame" prefHeight="37.0" prefWidth="112.0" text="Start game" />
-                        <ImageView fx:id="imageViewMage" fitHeight="150.0" fitWidth="200.0" layoutX="20.0" layoutY="14.0" onMouseClicked="#setRoleMage" pickOnBounds="true" preserveRatio="true">
+                        <TextArea fx:id="TaGameChat" layoutX="15.0" layoutY="381.0" prefHeight="44.0" prefWidth="365.0" />
+                        <Button fx:id="BtGameSendChat" layoutX="395.0" layoutY="385.0" mnemonicParsing="false" onAction="#sendGameLobbyMessage" prefHeight="37.0" prefWidth="84.0" text="Send" />
+                        <Button fx:id="BtGameReady" layoutX="633.0" layoutY="282.0" mnemonicParsing="false" onAction="#setGameReady" prefHeight="37.0" prefWidth="181.0" text="Ready" />
+                        <ListView fx:id="lvGamePlayer" layoutX="632.0" layoutY="14.0" prefHeight="239.0" prefWidth="182.0" />
+                        <ListView fx:id="lvGameChat" layoutX="14.0" layoutY="218.0" prefHeight="149.0" prefWidth="465.0" />
+                        <Label fx:id="LbGameName" layoutX="363.0" layoutY="6.0" prefHeight="17.0" prefWidth="122.0" text="test" />
+                        <Button fx:id="btGameLobbyExit" layoutX="633.0" layoutY="330.0" mnemonicParsing="false" onAction="#backToLobby" prefHeight="37.0" prefWidth="182.0" text="Exit" />
+                        <ImageView fx:id="imageViewMage" fitHeight="150.0" fitWidth="200.0" layoutX="21.0" layoutY="14.0" onMouseClicked="#setRoleMage" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../Resources/Mage-DOWN.png" />
                            </image>
                         </ImageView>
-                        <ImageView fx:id="imageViewRogue" fitHeight="150.0" fitWidth="200.0" layoutX="198.0" layoutY="14.0" onMouseClicked="#setRoleRogue" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="imageViewRogue" fitHeight="150.0" fitWidth="200.0" layoutX="171.0" layoutY="14.0" onMouseClicked="#setRoleRogue" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../Resources/RogueDOWN.png" />
                            </image>
                         </ImageView>
-                        <ImageView fx:id="imageViewWarrior" fitHeight="150.0" fitWidth="200.0" layoutX="20.0" layoutY="164.0" onMouseClicked="#setRoleWarrior" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="imageViewWarrior" fitHeight="150.0" fitWidth="200.0" layoutX="320.0" layoutY="14.0" onMouseClicked="#setRoleWarrior" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../Resources/Warrior-DOWN.png" />
                            </image>
                         </ImageView>
-                        <ImageView fx:id="imageViewHunter" fitHeight="150.0" fitWidth="200.0" layoutX="198.0" layoutY="164.0" onMouseClicked="#setRoleHunter" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="imageViewHunter" fitHeight="150.0" fitWidth="200.0" layoutX="470.0" layoutY="14.0" onMouseClicked="#setRoleHunter" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../Resources/Hunter-DOWN.png" />
                            </image>
                         </ImageView>
+                        <Label fx:id="lbGameMage" layoutX="81.0" layoutY="186.0" text="Mage" />
+                        <Label fx:id="lbGameRogue" layoutX="229.0" layoutY="186.0" text="Rogue" />
+                        <Label fx:id="lbGameWarrior" layoutX="375.0" layoutY="186.0" text="Warrior" />
+                        <Label fx:id="lbGameHunter" layoutX="518.0" layoutY="186.0" text="Hunter" />
                      </children>
                   </AnchorPane>
             </content>

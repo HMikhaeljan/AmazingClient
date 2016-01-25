@@ -6,13 +6,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" fx:id="apCreateUser" prefHeight="239.0" prefWidth="358.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="amazingclient.LoginController">
+<AnchorPane id="AnchorPane" fx:id="apCreateUser" prefHeight="476.0" prefWidth="848.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="amazingclient.LoginController">
    <children>
-      <TextField fx:id="tfNewUserUsername" layoutX="152.0" layoutY="39.0" />
-      <TextField fx:id="tfNewUserPassword" layoutX="152.0" layoutY="84.0" />
-      <Button fx:id="btCreateAccount" layoutX="152.0" layoutY="132.0" mnemonicParsing="false" onAction="#newUser" text="Create account" />
-      <Button fx:id="BtBackToLogin" layoutX="152.0" layoutY="200.0" mnemonicParsing="false" onAction="#backToLoginScreen" text="Back" />
-      <Label layoutX="66.0" layoutY="43.0" text="Username" />
-      <Label layoutX="66.0" layoutY="79.0" text="Password" />
+      <TextField fx:id="tfNewUserUsername" layoutX="368.0" layoutY="238.0" prefHeight="25.0" prefWidth="200.0" />
+      <TextField fx:id="tfNewUserPassword" layoutX="368.0" layoutY="271.0" prefHeight="25.0" prefWidth="200.0" />
+      <Button fx:id="btCreateAccount" layoutX="368.0" layoutY="307.0" mnemonicParsing="false" onAction="#newUser" prefHeight="25.0" prefWidth="127.0" text="Create account" />
+      <Button fx:id="BtBackToLogin" layoutX="501.0" layoutY="307.0" mnemonicParsing="false" onAction="#backToLoginScreen" prefHeight="25.0" prefWidth="67.0" text="Back" />
+      <Label fx:id="lbCreateUserUsername" layoutX="281.0" layoutY="242.0" text="Username" />
+      <Label fx:id="lbCreateUserPassword" layoutX="283.0" layoutY="275.0" text="Password" />
    </children>
 </AnchorPane>

@@ -6,10 +6,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="141.0" prefWidth="475.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="amazingclient.LoginController">
+<AnchorPane id="AnchorPane" prefHeight="476.0" prefWidth="848.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="amazingclient.LoginController">
    <children>
-      <TextField fx:id="tfCreateGameName" layoutX="122.0" layoutY="45.0" prefHeight="25.0" prefWidth="317.0" promptText="Enter game name" />
-      <Button fx:id="btCreateCreateGame" layoutX="195.0" layoutY="96.0" mnemonicParsing="false" onAction="#CreateGame" text="Create Game" />
-      <Label layoutX="42.0" layoutY="49.0" text="Game name:" />
+      <TextField fx:id="tfCreateGameName" layoutX="368.0" layoutY="238.0" prefHeight="25.0" prefWidth="317.0" promptText="Enter game name" />
+      <Button fx:id="btCreateCreateGame" layoutX="368.0" layoutY="274.0" mnemonicParsing="false" onAction="#CreateGame" text="Create Game" />
+      <Button fx:id="btCreateCancel" layoutX="600.0" layoutY="274.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="85.0" text="Cancel" />
+      <Label fx:id="lbCreateGameName" layoutX="259.0" layoutY="238.0" text="Game name:" />
    </children>
 </AnchorPane>

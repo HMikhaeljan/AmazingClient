@@ -4,13 +4,13 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane fx:id="apLogin" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="224.0" prefWidth="328.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="amazingclient.LoginController">
+<Pane fx:id="apLogin" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="476.0" prefWidth="848.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="amazingclient.LoginController">
    <children>
-      <TextField fx:id="tfBeginUsername" layoutX="132.0" layoutY="42.0" text="hovsep" />
-      <PasswordField fx:id="tfBeginPassword" layoutX="132.0" layoutY="75.0" />
-      <Button fx:id="btBeginLogIn" layoutX="132.0" layoutY="117.0" mnemonicParsing="false" onAction="#Login" text="Log in" />
-      <Button fx:id="btBeginCreate" layoutX="133.0" layoutY="163.0" mnemonicParsing="false" onAction="#switchToCreateUser" text="Create account" />
-      <Label layoutX="45.0" layoutY="46.0" text="Username" />
-      <Label layoutX="47.0" layoutY="79.0" text="Password" />
+      <TextField fx:id="tfBeginUsername" layoutX="368.0" layoutY="238.0" prefHeight="25.0" prefWidth="200.0" text="hovsep" />
+      <PasswordField fx:id="tfBeginPassword" layoutX="368.0" layoutY="271.0" prefHeight="25.0" prefWidth="200.0" />
+      <Button fx:id="btBeginLogIn" layoutX="368.0" layoutY="307.0" mnemonicParsing="false" onAction="#Login" prefHeight="25.0" prefWidth="95.0" text="Log in" />
+      <Button fx:id="btBeginCreate" layoutX="472.0" layoutY="307.0" mnemonicParsing="false" onAction="#switchToCreateUser" text="Create account" />
+      <Label fx:id="lbLoginUsername" layoutX="281.0" layoutY="242.0" text="Username" />
+      <Label fx:id="lbLoginPassword" layoutX="283.0" layoutY="275.0" text="Password" />
    </children>
 </Pane>
