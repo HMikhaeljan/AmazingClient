@@ -85,7 +85,7 @@ public class LoginController implements Initializable {
     long period = 5000;
     
     //RMI:
-    private static final int port = 1099;
+    private static final int port = 1098;
     private Registry registry;
     public IGameManager gameManager;
     //todo PAS DIT AAN
@@ -373,7 +373,7 @@ public class LoginController implements Initializable {
 
             if (g.getGameName().equals(lvLobbyGames.getSelectionModel().getSelectedItem())) {
                 LobbySession.game = gameManager.joinLobby(g.getGameID(), LobbySession.user.getUserID());
-                LobbySession.game.getPlayer(LobbySession.user.getUserID());
+                LobbySession.game.getPlayer(LobbySession.user.getUserID(), LobbySession.user.getName());
                 timer2.scheduleAtFixedRate(new launchGame(), 0, 1000);
                 stage = (Stage) btLobbyCreateGame.getScene().getWindow();
                 root = FXMLLoader.load(getClass().getResource("GameLobby.fxml"));
@@ -427,7 +427,7 @@ public class LoginController implements Initializable {
             ///TODO
 
             LobbySession.game = gameManager.newLobby(LobbySession.user.getUserID());
-            LobbySession.game.getPlayer(LobbySession.user.getUserID());
+            LobbySession.game.getPlayer(LobbySession.user.getUserID(), LobbySession.user.getName());
             LobbySession.game.setGameName(tfCreateGameName.getText());
             LbGameName.setText(LobbySession.game.getGameName());
             stage = (Stage) tfCreateGameName.getScene().getWindow();
@@ -536,7 +536,7 @@ public class LoginController implements Initializable {
 
     @FXML
     public void setGameReady() throws RemoteException {
-        LobbySession.game.setReady(LobbySession.game.getPlayer(LobbySession.user.getUserID()).getID(), true);
+        LobbySession.game.setReady(LobbySession.game.getPlayer(LobbySession.user.getUserID(), LobbySession.user.getName()).getID(), true);
         System.out.println("User: " + LobbySession.user.getUserID() + "Pressed Ready On Game: " + LobbySession.game);
         BtGameReady.setDisable(true);
     }

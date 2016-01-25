@@ -69,7 +69,7 @@ public class AMazeIng extends Application {
     private List<Node> playerNodes;
 
     //RMI:
-    private static final int port = 1099;
+    private static final int port = 1098;
     private static final String bindName = "Test";
     private Registry registry;
     //todo PAS DIT AAN
@@ -255,7 +255,7 @@ public class AMazeIng extends Application {
         public void handle(long now) {
             try {
                 if (keys.size() > 0) {
-                    game.handleInput(game.getPlayer(LobbySession.user.getUserID()).getID(), keys);
+                    game.handleInput(game.getPlayer(LobbySession.user.getUserID(), LobbySession.user.getName()).getID(), keys);
                 }
 
                 gs = game.getGameState();
@@ -277,7 +277,7 @@ public class AMazeIng extends Application {
                 abilNodes.clear();
 
                 for (Used u : gs.getAbilities()) {
-                    Node n = new ImageView(Ability.getImage(0+(4*LobbySession.game.getPlayer(LobbySession.user.getUserID()).getPlayerRoleID())));
+                    Node n = new ImageView(Ability.getImage(0+(4*LobbySession.game.getPlayer(LobbySession.user.getUserID(), LobbySession.user.getName()).getPlayerRoleID())));
                     n.relocate(u.getX(), u.getY());
                     n.setRotate(getRot(u.getDirection()));
                     abilNodes.add(n);
