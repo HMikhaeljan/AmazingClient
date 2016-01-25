@@ -44,6 +44,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
@@ -150,6 +151,14 @@ public class LoginController implements Initializable {
     @FXML
     private Label LbGameName = new Label("Pannekoek");
 
+    @FXML
+    private Label lbGameHunter = new Label();
+    @FXML
+    private Label lbGameMage = new Label();
+    @FXML
+    private Label lbGameWarrior = new Label();
+    @FXML
+    private Label lbGameRogue = new Label();
     //Create User
     @FXML
     private AnchorPane apCreateUser;
@@ -357,8 +366,7 @@ public class LoginController implements Initializable {
                     userName = user.getName();
                     LbLobbyUserName.textProperty().bind(userNameProperty);
                     loginIn.addToOnline(LobbySession.user);
-                    
-                    
+
                     stage = (Stage) btBeginLogIn.getScene().getWindow();
                     root = FXMLLoader.load(getClass().getResource("Lobby.fxml"));
                     Scene scene = new Scene(root);
@@ -485,15 +493,33 @@ public class LoginController implements Initializable {
             LobbySession.game = gameManager.newLobby(LobbySession.user.getUserID());
             LobbySession.game.getPlayer(LobbySession.user.getUserID(), LobbySession.user.getName());
             LobbySession.game.setGameName(tfCreateGameName.getText());
-            LbGameName.setText(LobbySession.game.getGameName());
-            timer2.scheduleAtFixedRate(new launchGame(), 0, 1000);
+
+            //todo
+            
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        LbGameName.setText(LobbySession.game.getGameName());
+                    } catch (RemoteException ex) {
+                        Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            });
+
+            timer2.scheduleAtFixedRate(
+                    new launchGame(), 0, 1000);
             stage = (Stage) tfCreateGameName.getScene().getWindow();
 
             root = FXMLLoader.load(getClass().getResource("GameLobby.fxml"));
             Scene scene = new Scene(root);
-            scene.getStylesheets().add((new File("css/GameLobby.css")).toURI().toURL().toExternalForm());
+
+            scene.getStylesheets()
+                    .add((new File("css/GameLobby.css")).toURI().toURL().toExternalForm());
             stage.setScene(scene);
-            stage.setResizable(false);
+
+            stage.setResizable(
+                    false);
             stage.show();
 
             initGameLobbyViews();
@@ -514,11 +540,11 @@ public class LoginController implements Initializable {
         //stage = (Stage) btBeginLogIn.getScene().getWindow();
         Stage stageAMazeIng = new Stage();
         amazeing.start(stageAMazeIng);
-        
+
         Stage stageStats = new Stage();
         StatsBar statsBar = new StatsBar(LobbySession.user, LobbySession.game);
         statsBar.start(stageStats);
-        
+
         stageAMazeIng.show();
     }
 
@@ -573,24 +599,42 @@ public class LoginController implements Initializable {
 
     @FXML
     public void setRoleMage() throws RemoteException {
+        lbGameHunter.setTextFill(Color.web("#32cd32"));
+        lbGameWarrior.setTextFill(Color.web("#32cd32"));
+        lbGameMage.setTextFill(Color.web("#FFFFFF"));
+        lbGameRogue.setTextFill(Color.web("#32cd32"));
         roleID = 1;
         setRole();
     }
 
     @FXML
     public void setRoleRogue() throws RemoteException {
+        lbGameHunter.setTextFill(Color.web("#32cd32"));
+        lbGameWarrior.setTextFill(Color.web("#32cd32"));
+        lbGameMage.setTextFill(Color.web("#32cd32"));
+        lbGameRogue.setTextFill(Color.web("#FFFFFF"));
         roleID = 0;
         setRole();
     }
 
     @FXML
     public void setRoleWarrior() throws RemoteException {
+        lbGameHunter.setTextFill(Color.web("#32cd32"));
+        lbGameWarrior.setTextFill(Color.web("#FFFFFF"));
+        lbGameMage.setTextFill(Color.web("#32cd32"));
+        lbGameRogue.setTextFill(Color.web("#32cd32"));
+
         roleID = 2;
         setRole();
     }
 
     @FXML
     public void setRoleHunter() throws RemoteException {
+
+        lbGameHunter.setTextFill(Color.web("#FFFFFF"));
+        lbGameWarrior.setTextFill(Color.web("#32cd32"));
+        lbGameMage.setTextFill(Color.web("#32cd32"));
+        lbGameRogue.setTextFill(Color.web("#32cd32"));
         roleID = 3;
         setRole();
     }

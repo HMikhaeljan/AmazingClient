@@ -102,10 +102,18 @@ public class AMazeIng extends Application {
 
         players = new ArrayList<>();
         playerNodes = new ArrayList<>();
-
         Image pimg = Sprite.LoadSprite("Resources/Mage-UP.png", 16, 16);
         GameState gs = game.getGameState();
-        for(Player p : gs.getPlayers()) {
+        for (Player p : gs.getPlayers()) {
+            if(p.getPlayerRoleID() == 0){
+                pimg = Sprite.LoadSprite("Resources/Rogue-UP.png", 16, 16);
+            } else if(p.getPlayerRoleID() == 1){
+                pimg = Sprite.LoadSprite("Resources/Mage-UP.png", 16, 16);
+            } else if(p.getPlayerRoleID() == 2){
+                pimg = Sprite.LoadSprite("Resources/Warrior-UP.png", 16, 16);
+            } else if(p.getPlayerRoleID() == 3){
+                pimg = Sprite.LoadSprite("Resources/Hunter-UP.png", 16, 16);
+            }
             Node playerNode = new ImageView(pimg);
             playerNodes.add(playerNode);
             playerNode.setLayoutX((p.getX()));
@@ -277,10 +285,16 @@ public class AMazeIng extends Application {
                 abilNodes.clear();
 
                 for (Used u : gs.getAbilities()) {
-                    Node n = new ImageView(Ability.getImage(0+(4*LobbySession.game.getPlayer(LobbySession.user.getUserID(), LobbySession.user.getName()).getPlayerRoleID())));
-                    n.relocate(u.getX(), u.getY());
-                    n.setRotate(getRot(u.getDirection()));
-                    abilNodes.add(n);
+                    for (Player p : LobbySession.game.getPlayers()) {
+                        if (u.getCreatorID() == p.getUserID()) {
+                            Node n = new ImageView(Ability.getImage (4 * p.getPlayerRoleID()));
+
+                            //Node n = new ImageView(Ability.getImage(0 + (4 * LobbySession.game.getPlayer(LobbySession.user.getUserID(), LobbySession.user.getName()).getPlayerRoleID())));
+                            n.relocate(u.getX(), u.getY());
+                            n.setRotate(getRot(u.getDirection()));
+                            abilNodes.add(n);
+                        }
+                    }
                 }
 
                 for (Node n : abilNodes) {
