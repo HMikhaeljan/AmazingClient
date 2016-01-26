@@ -11,6 +11,7 @@ import amazingsharedproject.Interfaces.IGameManager;
 import amazingsharedproject.Player;
 import amazingsharedproject.Sprite;
 import amazingsharedproject.*;
+import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
@@ -67,14 +68,7 @@ public class AMazeIng extends Application {
     //Players:
     private List<Player> players;
     private List<Node> playerNodes;
-
-    //RMI:
-    private static final int port = 1098;
-    private static final String bindName = "Test";
-    private Registry registry;
-    //todo PAS DIT AAN
-    private static final String ip = "localhost";
-    
+    LoginController log;
     Stage pStage;
 
     public AMazeIng() {
@@ -276,6 +270,23 @@ public class AMazeIng extends Application {
 
                 gs = game.getGameState();
                 
+                //Handle win condition:
+                int killcount=0;
+                for(Player p : gs.getPlayers()) { //Count kills
+                    if(p.isDeath())
+                        killcount++;
+                }
+                if(killcount == gs.getPlayers().size()-1) { //If all but 1 has been killed
+                    if(!game.getPlayer(LobbySession.user.getUserID(), "").isDeath()) {
+                        Stage st = new Stage();
+                        YouWin youWin = new YouWin(game.getPlayer(LobbySession.user.getUserID(), ""));
+                        youWin.start(st);
+                        this.stop();
+                        pStage.close();
+                        LobbySession.statStage.close();
+                    }
+                }
+                
                 int idx= 0;
                 for(Node n: playerNodes) { // Drawing players
                     if(gs.getPlayers().get(idx) != null) {
@@ -290,6 +301,7 @@ public class AMazeIng extends Application {
                             gameOver.start(st);
                             this.stop();
                             pStage.close();
+                            LobbySession.statStage.close();
                         }
                         else if(gs.getPlayers().get(idx).isDeath()) { //If other player is death
                             group.getChildren().remove(n);
@@ -321,28 +333,9 @@ public class AMazeIng extends Application {
                 for (Node n : abilNodes) { // Adding nodes
                     group.getChildren().add(n);
                 }
-                
-                
-                int tpos= game.getGrid().length * spritesize-100;
-                //TEXT:
-                for(Text t: msgs) {
-                    group.getChildren().remove(t);
-                }
-                msgs.clear();
-                for(String s : gs.getMessages()) {
-                    Text t = new Text(s);
-                    t.setFill(Color.GREENYELLOW);
-                    //t.setStroke(Color.BLACK);
-                    t.setX(20);
-                    t.setY(tpos);
-                    tpos-=15;
-                    msgs.add(t);
-                }
-                
-                for(Text t : msgs) {
-                    group.getChildren().add(t);
-                }
             } catch (RemoteException ex) {
+                Logger.getLogger(AMazeIng.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (MalformedURLException ex) {
                 Logger.getLogger(AMazeIng.class.getName()).log(Level.SEVERE, null, ex);
             }
             //System.out.println("X: " + gs.getPlayers().get(0).getX() + "Y: " + gs.getPlayers().get(0).getY());

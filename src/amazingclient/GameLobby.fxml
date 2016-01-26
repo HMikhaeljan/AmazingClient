@@ -48,9 +48,13 @@
                   </AnchorPane>
             </content>
           </Tab>
-          <Tab fx:id="tpGameLobbyStats" text="Stats">
+          <Tab fx:id="tpGameLobbyStats" text="Options">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="btStartMusic" layoutX="59.0" layoutY="40.0" mnemonicParsing="false" onAction="#startMusic" text="Start music" />
+                        <Button fx:id="btStopMusic" layoutX="59.0" layoutY="40.0" mnemonicParsing="false" onAction="#stopMusic" text="Stop Music" />
+                     </children></AnchorPane>
             </content>
           </Tab>
         </tabs>

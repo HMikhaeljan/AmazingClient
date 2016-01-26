@@ -12,6 +12,7 @@ import amazingsharedproject.Player;
 import amazingsharedproject.User;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -54,7 +55,7 @@ import javafx.stage.Stage;
 public class LoginController implements Initializable {
 
     ILogin loginIn;
-
+    public Stage stageStats;
     AmazingClient st = new AmazingClient();
 
     private ArrayList lobbyChat = new ArrayList();
@@ -169,6 +170,12 @@ public class LoginController implements Initializable {
     @FXML
     private Button btCreateAccount;
 
+    //Options music
+    @FXML
+    private Button btStartMusic;
+    @FXML
+    private Button btStopMusic;
+
     public LoginController() {
         try {
             registry = LocateRegistry.getRegistry(ip, port);
@@ -181,6 +188,8 @@ public class LoginController implements Initializable {
         } catch (RemoteException | NotBoundException ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        stageStats = new Stage();
+        LobbySession.statStage = stageStats;
     }
 
     @Override
@@ -188,7 +197,6 @@ public class LoginController implements Initializable {
 
         lobbyChat.add(chatinfo);
         gameLobbyChat.add("Loading games...");
-
         try {
             gameManager = (IGameManager) registry.lookup("GameManager");
         } catch (RemoteException d) {
@@ -206,6 +214,21 @@ public class LoginController implements Initializable {
         gameNameProperty = new SimpleStringProperty(gameName);
         userNameProperty = new SimpleStringProperty(userName);
 
+    }
+
+    @FXML
+    private void startMusic() throws IOException {
+        Music.startMusic(1);
+        btStartMusic.setVisible(false);
+        btStopMusic.setVisible(true);
+    }
+
+    @FXML
+    private void stopMusic() throws IOException {
+        Music.stopMusic();
+        Music.stopMusic();
+        btStartMusic.setVisible(true);
+        btStopMusic.setVisible(false);
     }
 
     @FXML
@@ -332,10 +355,14 @@ public class LoginController implements Initializable {
                     try {
                         if (LobbySession.game.allPlayersReady()) {
                             timer2.cancel();
+                            Music.stopMusic();
                             startGame();
+                            Music.startMusic(2);
                             System.out.println("Starting game");
                         }
                     } catch (RemoteException | NotBoundException ex) {
+                        Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
                         Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -366,7 +393,6 @@ public class LoginController implements Initializable {
                     userName = user.getName();
                     LbLobbyUserName.textProperty().bind(userNameProperty);
                     loginIn.addToOnline(LobbySession.user);
-
                     stage = (Stage) btBeginLogIn.getScene().getWindow();
                     root = FXMLLoader.load(getClass().getResource("Lobby.fxml"));
                     Scene scene = new Scene(root);
@@ -380,37 +406,24 @@ public class LoginController implements Initializable {
                     alert.setTitle("Information");
                     alert.setHeaderText(null);
                     alert.setContentText("Please enter correct name and password");
-
                     alert.showAndWait();
                 }
-
             }
-            //if there are no users online log in.
             if (loginIn.getOnlineUsers().isEmpty()) {
-                if (loginIn.Login(tfBeginUsername.getText(), tfBeginPassword.getText()) != null) {
-                    user = loginIn.Login(tfBeginUsername.getText(), tfBeginPassword.getText());
-                    LobbySession.user = user;
-                    userName = user.getName();
-                    LbLobbyUserName.textProperty().bind(userNameProperty);
-                    loginIn.addToOnline(LobbySession.user);
-                    stage = (Stage) btBeginLogIn.getScene().getWindow();
-                    root = FXMLLoader.load(getClass().getResource("Lobby.fxml"));
-                    Scene scene = new Scene(root);
-                    scene.getStylesheets().add((new File("css/Lobby.css")).toURI().toURL().toExternalForm());
-                    stage.setScene(scene);
-                    stage.setResizable(false);
-                    stage.show();
+                user = loginIn.Login(tfBeginUsername.getText(), tfBeginPassword.getText());
+                LobbySession.user = user;
+                userName = user.getName();
+                LbLobbyUserName.textProperty().bind(userNameProperty);
+                loginIn.addToOnline(LobbySession.user);
+                stage = (Stage) btBeginLogIn.getScene().getWindow();
+                root = FXMLLoader.load(getClass().getResource("Lobby.fxml"));
+                Scene scene = new Scene(root);
+                scene.getStylesheets().add((new File("css/Lobby.css")).toURI().toURL().toExternalForm());
+                stage.setScene(scene);
+                stage.setResizable(false);
+                stage.show();
 
-                } else {
-                    Alert alert = new Alert(AlertType.INFORMATION);
-                    alert.setTitle("Information");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Please enter correct name and password");
-
-                    alert.showAndWait();
-                }
             }
-
         } catch (Exception ex) {
             System.out.println("Not working: " + ex);
         }
@@ -495,7 +508,6 @@ public class LoginController implements Initializable {
             LobbySession.game.setGameName(tfCreateGameName.getText());
 
             //todo
-            
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
@@ -507,19 +519,16 @@ public class LoginController implements Initializable {
                 }
             });
 
-            timer2.scheduleAtFixedRate(
-                    new launchGame(), 0, 1000);
+            timer2.scheduleAtFixedRate(new launchGame(), 0, 1000);
             stage = (Stage) tfCreateGameName.getScene().getWindow();
 
             root = FXMLLoader.load(getClass().getResource("GameLobby.fxml"));
             Scene scene = new Scene(root);
 
-            scene.getStylesheets()
-                    .add((new File("css/GameLobby.css")).toURI().toURL().toExternalForm());
+            scene.getStylesheets().add((new File("css/GameLobby.css")).toURI().toURL().toExternalForm());
             stage.setScene(scene);
 
-            stage.setResizable(
-                    false);
+            stage.setResizable(false);
             stage.show();
 
             initGameLobbyViews();
@@ -535,16 +544,15 @@ public class LoginController implements Initializable {
     }
 
     @FXML
-    public void startGame() throws NotBoundException, RemoteException {
+    public void startGame() throws NotBoundException, RemoteException, MalformedURLException {
         AMazeIng amazeing = new AMazeIng();
         //stage = (Stage) btBeginLogIn.getScene().getWindow();
         Stage stageAMazeIng = new Stage();
         amazeing.start(stageAMazeIng);
 
-        Stage stageStats = new Stage();
+        
         StatsBar statsBar = new StatsBar(LobbySession.user, LobbySession.game);
         statsBar.start(stageStats);
-
         stageAMazeIng.show();
     }
 
@@ -561,14 +569,20 @@ public class LoginController implements Initializable {
 
     @FXML
     public void newUser(Event evt) throws SQLException, RemoteException {
-        loginIn.registerUser(tfNewUserUsername.getText(), tfNewUserPassword.getText());
+        if (tfNewUserUsername.getText().equals("") || tfNewUserPassword.getText().equals("")) {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Information Dialog");
+            alert.setHeaderText("Please fill in username and password");
+            alert.showAndWait();
+        } else {
+            loginIn.registerUser(tfNewUserUsername.getText(), tfNewUserPassword.getText());
 
-        Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle("Information");
-        alert.setHeaderText(null);
-        alert.setContentText(tfNewUserUsername.getText() + " your account has been succesfully created");
-        alert.showAndWait();
-
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Information");
+            alert.setHeaderText(null);
+            alert.setContentText(tfNewUserUsername.getText() + " your account has been succesfully created");
+            alert.showAndWait();
+        }
     }
 
     @FXML

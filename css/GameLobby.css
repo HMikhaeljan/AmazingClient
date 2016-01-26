@@ -83,3 +83,11 @@
 	-fx-background-color: limegreen;
 }
 
+#btStopMusic{
+	-fx-color: limegreen;
+	-fx-background-color: limegreen;
+}
+#btStartMusic{
+	-fx-color: limegreen;
+	-fx-background-color: limegreen;
+}

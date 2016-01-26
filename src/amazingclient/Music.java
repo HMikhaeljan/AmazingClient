@@ -10,8 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
 
@@ -28,7 +26,7 @@ public final class Music {
 
     }
 
-    public static void startMusic(int nummer) {
+    public static void startMusic(int nummer) throws IOException {
         timer = new Timer();
         switch (nummer) {
             case 1:

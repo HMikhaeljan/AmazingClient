@@ -6,6 +6,7 @@
 package amazingclient;
 import amazingsharedproject.Interfaces.IGame;
 import amazingsharedproject.User;
+import javafx.stage.Stage;
 
 /**
  *
@@ -14,6 +15,7 @@ import amazingsharedproject.User;
 public final class LobbySession {
     public static User user;
     public static IGame game;
+    public static Stage statStage;
     
     private LobbySession() {
     }
