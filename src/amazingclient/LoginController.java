@@ -89,7 +89,7 @@ public class LoginController implements Initializable {
     long period = 1000;
 
     //RMI:
-    private static final int port = 1099;
+    private static final int port = 1098;
     private Registry registry;
     public IGameManager gameManager;
     //todo PAS DIT AAN

@@ -74,13 +74,15 @@ public class AMazeIng extends Application {
     private Registry registry;
     //todo PAS DIT AAN
     private static final String ip = "localhost";
+    
+    Stage pStage;
 
     public AMazeIng() {
     }
 
     @Override
     public void start(Stage primaryStage) throws NotBoundException, RemoteException {
-
+        pStage= primaryStage;
         game = LobbySession.game;
 
         keys = new ArrayList<KeyCode>();
@@ -132,6 +134,12 @@ public class AMazeIng extends Application {
 
             @Override
             public void handle(KeyEvent event) {
+                try {
+                    if(LobbySession.game.getPlayer(LobbySession.user.getUserID(), "").isDeath())
+                        return;
+                } catch (RemoteException ex) {
+                    Logger.getLogger(AMazeIng.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 switch (event.getCode()) {
                     case LEFT:
                         if (!keys.contains(KeyCode.LEFT)) {
@@ -269,22 +277,35 @@ public class AMazeIng extends Application {
                 gs = game.getGameState();
                 
                 int idx= 0;
-                for(Node n: playerNodes) {
+                for(Node n: playerNodes) { // Drawing players
                     if(gs.getPlayers().get(idx) != null) {
-                        Player p = gs.getPlayers().get(idx);
-                        n.relocate(p.getX(), p.getY());
-                        n.setRotate(getRot(p.getDirection()));
+                        if(!gs.getPlayers().get(idx).isDeath()) {
+                            Player p = gs.getPlayers().get(idx);
+                            n.relocate(p.getX(), p.getY());
+                            n.setRotate(getRot(p.getDirection()));
+                        }
+                        else if(LobbySession.user.getUserID() == gs.getPlayers().get(idx).getUserID() && gs.getPlayers().get(idx).isDeath()) { //If player is dead
+                            Stage st = new Stage();
+                            GameOver gameOver= new GameOver(LobbySession.game.getPlayer(LobbySession.user.getUserID(), ""));
+                            gameOver.start(st);
+                            this.stop();
+                            pStage.close();
+                        }
+                        else if(gs.getPlayers().get(idx).isDeath()) { //If other player is death
+                            group.getChildren().remove(n);
+                            continue;
+                        }
                         //System.out.println("Node edited");
                         idx++;
                     }
                 }
 
-                for (Node n : abilNodes) {
+                for (Node n : abilNodes) { // Removing abilities
                     group.getChildren().remove(n);
                 }
                 abilNodes.clear();
 
-                for (Used u : gs.getAbilities()) {
+                for (Used u : gs.getAbilities()) { // Drawing abilities
                     for (Player p : LobbySession.game.getPlayers()) {
                         if (u.getCreatorID() == p.getUserID()) {
                             Node n = new ImageView(Ability.getImage (4 * p.getPlayerRoleID()));
@@ -297,7 +318,7 @@ public class AMazeIng extends Application {
                     }
                 }
 
-                for (Node n : abilNodes) {
+                for (Node n : abilNodes) { // Adding nodes
                     group.getChildren().add(n);
                 }
                 
@@ -311,6 +332,7 @@ public class AMazeIng extends Application {
                 for(String s : gs.getMessages()) {
                     Text t = new Text(s);
                     t.setFill(Color.GREENYELLOW);
+                    //t.setStroke(Color.BLACK);
                     t.setX(20);
                     t.setY(tpos);
                     tpos-=15;
